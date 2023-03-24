@@ -1,0 +1,12 @@
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\control\ReadController.java
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\model\SmtpAgent.java
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\ServletInitializer.java
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\control\CommandType.java
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\model\MessageFormatter.java
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\model\MessageParser.java
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\control\SystemController.java
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\model\UserAdminAgent.java
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\control\WriteController.java
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\model\Pop3Agent.java
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\PropertyReader.java
+D:\4-1\project\WebMailSystem\src\main\java\deu\cse\spring_webmail\SpringWebmailApplication.java
