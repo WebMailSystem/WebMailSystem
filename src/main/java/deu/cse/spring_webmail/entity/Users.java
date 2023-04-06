@@ -10,42 +10,54 @@ import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 import org.springframework.lang.Nullable;
 
 /**
  *
  * @author 정기석
  */
-@Entity
+@Entity(name = "users")
 @Getter
 @Builder
 @AllArgsConstructor
+@ToString
 public class Users {
     
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
     
-    @Column(nullable = false,unique = true)
+    @Column(nullable = false,unique = true,name = "username")
     private String username;
     
+    @Column(name = "pwdHash")
     private String pwdHash;
     
+    @Column(name = "pwdAlgorithm")
     private String pwdAlgorithm ;
     
+    @Column(name = "useForwarding")
     private int useForwarding;
     
+    @Column(name = "forwardDestination")
     private String forwardDestination ;
     
+    @Column(name = "useAlias")
     private int useAlias;
     
+    @Column(name = "alias")
     private String alias ;
     
     @Enumerated(EnumType.STRING)
+    @Column(name = "role")
     private Role role ;
     
 }

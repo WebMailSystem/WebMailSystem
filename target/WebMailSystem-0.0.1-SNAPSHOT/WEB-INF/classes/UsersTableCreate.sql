@@ -8,7 +8,7 @@
  */
 
 CREATE TABLE users (
-id bigint
+id bigint auto_increment
 ,username VARCHAR(64) unique not null
 , pwdHash VARCHAR(50)
 , pwdAlgorithm VARCHAR(20)
