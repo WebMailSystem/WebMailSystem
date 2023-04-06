@@ -31,9 +31,9 @@ public class UserService {
                 .pwdHash(password)
                 .pwdAlgorithm("BCrypt")
                 .useForwarding(0)
-                .forwardDestination("")
+                .forwardDestination(null)
                 .useAlias(0)
-                .alias("")
+                .alias(null)
                 .role(Role.USER).build();
         usersRepository.save(user);
     }
