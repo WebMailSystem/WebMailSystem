@@ -6,7 +6,7 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@page import="deu.cse.spring_webmail.control.CommandType"%>
-
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 
 <html>
@@ -17,11 +17,19 @@
     </head>
     <body>
         <%@include file="header.jspf"%>
+      
 
-
+        
         <div id="login_form">
             <!--<form method="POST" action="login.do?menu=<%= CommandType.LOGIN %>">-->
             <form method="POST" action="/webmail/login.do">
+                <c:if test="${!empty errorMessage}">
+                    <div id="errorMessage">
+                         <p style="color: red">
+                             ${errorMessage}
+                     </p>
+                    </div>
+                </c:if>
                 <!--사용자: <input type="text" name="userid" size="20" autofocus> <br />-->
                 사용자: <input type="text" name="username" size="20" autofocus> <br />
                 암&nbsp;&nbsp;&nbsp;호: <input type="password" name="password" size="20"> <br /> <br />

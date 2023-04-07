@@ -59,11 +59,11 @@ public class SystemController {
     private String JAMES_HOST;
 
     @GetMapping("/")
-    public String index() {
+    public String index(@RequestParam(required = false,name = "errormessage")String errorMessage,Model model) {
         log.debug("index() called...");
         session.setAttribute("host", JAMES_HOST);
         session.setAttribute("debug", "false");
-
+        model.addAttribute("errorMessage", errorMessage);
         return "/index";
     }
     /*

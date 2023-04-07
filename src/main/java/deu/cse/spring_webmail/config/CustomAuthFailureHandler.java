@@ -1,6 +1,7 @@
 package deu.cse.spring_webmail.config;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,6 +44,7 @@ public class CustomAuthFailureHandler extends SimpleUrlAuthenticationFailureHand
             log.info("exception = {}",exception);
         }
         log.info("loginfailed message = {}",errorMessage);
+        errorMessage = URLEncoder.encode(errorMessage, "UTF-8");
         setDefaultFailureUrl("/?errormessage="+errorMessage);
         super.onAuthenticationFailure(request, response, exception); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/OverriddenMethodBody
     }
