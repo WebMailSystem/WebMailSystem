@@ -10,6 +10,7 @@
 CREATE TABLE users (
 id bigint auto_increment
 ,username VARCHAR(64) unique not null
+,password varchar(255)
 , pwdHash VARCHAR(50)
 , pwdAlgorithm VARCHAR(20)
 , useForwarding INTEGER

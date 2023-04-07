@@ -13,7 +13,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
-public class SignupDTO {
+public class SignupForm {
 
     private String username;
     private String password;

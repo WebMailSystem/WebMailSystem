@@ -4,7 +4,7 @@
  */
 package deu.cse.spring_webmail.control;
 
-import deu.cse.spring_webmail.dto.SignupDTO;
+import deu.cse.spring_webmail.dto.SignupForm;
 import deu.cse.spring_webmail.model.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class UserController {
     }
     
     @PostMapping("/sign_up.do")
-    public String signUpDo(SignupDTO user,RedirectAttributes rttr){
+    public String signUpDo(SignupForm user,RedirectAttributes rttr){
         log.info("SignDTO ={}",user.getUsername());
        boolean check = userService.check(user.getUsername());
        if(check == true){

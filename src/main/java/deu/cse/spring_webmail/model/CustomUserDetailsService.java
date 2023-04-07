@@ -7,6 +7,7 @@ package deu.cse.spring_webmail.model;
 import deu.cse.spring_webmail.dto.SessionDTO;
 import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.repository.UsersRepository;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +26,7 @@ import org.springframework.stereotype.Component;
 public class CustomUserDetailsService implements UserDetailsService{
     private final UsersRepository usersRepository;
     private final HttpSession session;
+    private final HttpServletRequest request;
     
     /**
      *
@@ -34,11 +36,15 @@ public class CustomUserDetailsService implements UserDetailsService{
      */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+       
         Users user = usersRepository.findByUsername(username).orElseThrow(() 
                 -> new UsernameNotFoundException("유저 없음"));
         
-        if(user != null){
-            session.setAttribute("user", new SessionDTO(user));
+        if(user != null){                       
+            session.setAttribute("user", new SessionDTO(user));            
+            session.setAttribute("userid",user.getUsername());
+            session.setAttribute("host",request.getSession().getAttribute("host"));
+            session.setAttribute("password","1234");
         }
         
         return new CustomUserDetails(user);

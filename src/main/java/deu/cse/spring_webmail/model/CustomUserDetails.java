@@ -7,6 +7,7 @@ package deu.cse.spring_webmail.model;
 import deu.cse.spring_webmail.entity.Users;
 import java.util.ArrayList;
 import java.util.Collection;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
  *
  * @author 정기석
  */
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class CustomUserDetails implements UserDetails{
     
     private final Users user;
@@ -31,7 +32,7 @@ public class CustomUserDetails implements UserDetails{
 
     @Override
     public String getPassword() {
-        return user.getPwdHash();
+        return user.getPassword();
     }
 
     @Override

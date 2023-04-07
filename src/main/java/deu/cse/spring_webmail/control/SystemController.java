@@ -66,7 +66,7 @@ public class SystemController {
 
         return "/index";
     }
-
+    /*
     @RequestMapping(value = "/login.do", method = {RequestMethod.GET, RequestMethod.POST})
     public String loginDo(@RequestParam Integer menu) {
         String url = "";
@@ -116,7 +116,7 @@ public class SystemController {
     public String loginFail() {
         return "login_fail";
     }
-
+   */
     protected boolean isAdmin(String userid) {
         boolean status = false;
 
@@ -130,10 +130,11 @@ public class SystemController {
     @GetMapping("/main_menu")
     public String mainmenu(Model model) {
         Pop3Agent pop3 = new Pop3Agent();
+        log.info("host = {},id = {},password = {}",(String) session.getAttribute("host"),(String) session.getAttribute("userid"),
+                (String) session.getAttribute("password"));
         pop3.setHost((String) session.getAttribute("host"));
         pop3.setUserid((String) session.getAttribute("userid"));
         pop3.setPassword((String) session.getAttribute("password"));
-
         String messageList = pop3.getMessageList();
         model.addAttribute("messageList", messageList);
         return "main_menu";

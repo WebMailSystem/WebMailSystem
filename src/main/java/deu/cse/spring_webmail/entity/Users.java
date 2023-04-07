@@ -16,6 +16,7 @@ import javax.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 import org.springframework.lang.Nullable;
 
@@ -28,6 +29,7 @@ import org.springframework.lang.Nullable;
 @Builder
 @AllArgsConstructor
 @ToString
+@NoArgsConstructor
 public class Users {
     
     @Id
@@ -40,6 +42,9 @@ public class Users {
     
     @Column(name = "pwdHash")
     private String pwdHash;
+    
+    @Column(name = "password")
+    private String password;
     
     @Column(name = "pwdAlgorithm")
     private String pwdAlgorithm ;

@@ -4,6 +4,8 @@
  */
 package deu.cse.spring_webmail.config;
 
+import deu.cse.spring_webmail.entity.Role;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -11,6 +13,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
 /**
  *
@@ -18,7 +21,10 @@ import org.springframework.security.web.SecurityFilterChain;
  */
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class WebSecurityConfig {
+    
+    private final AuthenticationFailureHandler customFailureHandler;
     
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
@@ -29,7 +35,25 @@ public class WebSecurityConfig {
      @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf().disable();
-        return http.authorizeRequests().antMatchers("/").permitAll().and().build();
+        return http.authorizeRequests().antMatchers("/","/css/**").permitAll()
+                .antMatchers("/admin_menu").hasAnyRole("ADMIN")
+                .anyRequest().authenticated()                              
+                .and()
+                .formLogin()
+                .usernameParameter("username")
+                .passwordParameter("password")
+                .loginPage("/")
+                .loginProcessingUrl("/login.do")                        
+                .failureHandler(customFailureHandler)
+                .defaultSuccessUrl("/main_menu")
+                .and()
+                .logout()
+                .logoutSuccessUrl("/")
+                .invalidateHttpSession(true)
+                .and()
+                .exceptionHandling().accessDeniedPage("/")
+                .and()
+                .build();
                 
     }
 

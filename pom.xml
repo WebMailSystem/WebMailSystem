@@ -82,6 +82,18 @@
             <artifactId>tomcat-embed-jasper</artifactId>
             <version>9.0.64</version>
         </dependency>
+        <!--sql 로그를 보기 위한 디펜던시-->
+        <dependency>
+            <groupId>com.github.gavlyukovskiy</groupId>
+            <artifactId>p6spy-spring-boot-starter</artifactId>
+            <version>1.7.1</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>javax.mail-api</artifactId>
+            <version>1.4.4</version>
+        </dependency>
+
     </dependencies>
 
     <build>
