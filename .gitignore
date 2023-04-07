@@ -24,6 +24,7 @@ hs_err_pid*
 replay_pid*
 
 ### NetBeans ###
+application-db.properties
 **/nbproject/private/
 **/nbproject/Makefile-*.mk
 **/nbproject/Package-*.bash
@@ -32,3 +33,4 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+target/
