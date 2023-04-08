@@ -9,6 +9,7 @@ spring.datasource.url=jdbc:mariadb://localhost:3306/mail
 spring.datasource.username=jdbctester
 spring.datasource.password=1234
 ```
+
 Oauth2 보안문제로 application-oauth2.properties 파일을 gitignore 파일에 등록시켜놓음 그러므로 각자 파일 생성 해야함
 application-oauth2.properties 생성후 밑에 내용 적절하게 변경할것
 cliend id,secret은 https://developers.kakao.com/ 에서 등록후 값 얻어오기
@@ -27,3 +28,4 @@ spring.security.oauth2.client.provider.kakao.token-uri=https://kauth.kakao.com/o
 spring.security.oauth2.client.provider.kakao.user-info-uri=https://kapi.kakao.com/v2/user/me
 spring.security.oauth2.client.provider.kakao.user-name-attribute=id
 ```
+

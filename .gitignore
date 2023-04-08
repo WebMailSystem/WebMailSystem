@@ -26,8 +26,6 @@ replay_pid*
 ### NetBeans ###
 application-db.properties
 application-oauth2.properties
-target/
-
 **/nbproject/private/
 **/nbproject/Makefile-*.mk
 **/nbproject/Package-*.bash
@@ -36,3 +34,4 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
+target/
