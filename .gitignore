@@ -25,6 +25,7 @@ replay_pid*
 
 ### NetBeans ###
 application-db.properties
+application-oauth2.properties
 **/nbproject/private/
 **/nbproject/Makefile-*.mk
 **/nbproject/Package-*.bash

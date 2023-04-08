@@ -4,6 +4,9 @@
  */
 package deu.cse.spring_webmail.control;
 
+import deu.cse.spring_webmail.dto.SessionDTO;
+import deu.cse.spring_webmail.entity.Role;
+import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.model.Pop3Agent;
 import deu.cse.spring_webmail.model.UserAdminAgent;
 import java.awt.image.BufferedImage;
@@ -59,14 +62,19 @@ public class SystemController {
     private String JAMES_HOST;
 
     @GetMapping("/")
-    public String index() {
+    public String index(@RequestParam(required = false,name = "errormessage")String errorMessage,Model model) {              
+        log.info("session = {}",session.getAttribute("userid"));
+        SessionDTO sessionDTO = (SessionDTO)session.getAttribute("user");
+        if(sessionDTO != null && sessionDTO.getRole().equals(Role.USER)){
+            return "redirect:/main_menu";
+        }
         log.debug("index() called...");
         session.setAttribute("host", JAMES_HOST);
         session.setAttribute("debug", "false");
-
+        model.addAttribute("errorMessage", errorMessage);
         return "/index";
     }
-
+    /*
     @RequestMapping(value = "/login.do", method = {RequestMethod.GET, RequestMethod.POST})
     public String loginDo(@RequestParam Integer menu) {
         String url = "";
@@ -116,7 +124,7 @@ public class SystemController {
     public String loginFail() {
         return "login_fail";
     }
-
+   */
     protected boolean isAdmin(String userid) {
         boolean status = false;
 
@@ -130,10 +138,11 @@ public class SystemController {
     @GetMapping("/main_menu")
     public String mainmenu(Model model) {
         Pop3Agent pop3 = new Pop3Agent();
+        log.info("host = {},id = {},password = {}",(String) session.getAttribute("host"),(String) session.getAttribute("userid"),
+                (String) session.getAttribute("password"));
         pop3.setHost((String) session.getAttribute("host"));
         pop3.setUserid((String) session.getAttribute("userid"));
         pop3.setPassword((String) session.getAttribute("password"));
-
         String messageList = pop3.getMessageList();
         model.addAttribute("messageList", messageList);
         return "main_menu";
