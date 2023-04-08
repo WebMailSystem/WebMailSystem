@@ -5,6 +5,8 @@
 package deu.cse.spring_webmail.config;
 
 import deu.cse.spring_webmail.entity.Role;
+import deu.cse.spring_webmail.model.CustomOAuth2UserService;
+import deu.cse.spring_webmail.model.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +27,7 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 public class WebSecurityConfig {
     
     private final AuthenticationFailureHandler customFailureHandler;
+    private final CustomOAuth2UserService customUserService;
     
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
@@ -35,7 +38,7 @@ public class WebSecurityConfig {
      @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.csrf().disable();
-        return http.authorizeRequests().antMatchers("/","/css/**","/signup","/signup.do").permitAll()
+        http.authorizeRequests().antMatchers("/","/css/**","/signup","/signup.do","/error").permitAll()
                 .antMatchers("/admin_menu").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()                              
                 .and()
@@ -53,7 +56,11 @@ public class WebSecurityConfig {
                 .and()
                 .exceptionHandling().accessDeniedPage("/")
                 .and()
-                .build();
+                .oauth2Login()
+                .userInfoEndpoint()                
+                .userService(customUserService);
+                
+                return http.build();
                 
     }
 

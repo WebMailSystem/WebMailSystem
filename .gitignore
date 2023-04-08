@@ -25,6 +25,7 @@ replay_pid*
 
 ### NetBeans ###
 application-db.properties
+application-oauth2.properties
 target/
 
 **/nbproject/private/

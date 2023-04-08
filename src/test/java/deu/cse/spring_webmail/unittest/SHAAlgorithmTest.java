@@ -27,6 +27,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 public class SHAAlgorithmTest {
        
     @Test
+    void 이메일자르기테스트(){
+        String email = "abce@naver.com";
+        String result = email.substring(0,email.lastIndexOf("@"));
+        log.info("result = {}",result);
+    }
+    
+    
+    @Test
     void shaTest(){
         try {
             //given

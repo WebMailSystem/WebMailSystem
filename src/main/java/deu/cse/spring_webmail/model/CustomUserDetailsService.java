@@ -39,7 +39,6 @@ public class CustomUserDetailsService implements UserDetailsService{
        
         Users user = usersRepository.findByUsername(username).orElseThrow(() 
                 -> new UsernameNotFoundException("유저 없음"));
-        
         if(user != null){                       
             session.setAttribute("user", new SessionDTO(user));            
             session.setAttribute("userid",user.getUsername());

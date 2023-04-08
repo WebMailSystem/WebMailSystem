@@ -48,11 +48,9 @@ public class UserController {
         log.info("SignDTO ={}",user.getUsername());
        boolean check = userService.check(user.getUsername());
        if(check == true){
-           log.info("이거 실행은 되는거지?33");
 //           rttr.addAttribute("msg", "아이디 중복입니다");
            return "redirect:/signup";
        }
-       log.info("이거 실행은 되는거지?44");
        userService.signUp(user);
        return "redirect:/";
     }
