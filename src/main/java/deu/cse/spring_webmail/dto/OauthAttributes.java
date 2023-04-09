@@ -47,6 +47,7 @@ public class OauthAttributes {
         this.email = email.substring(0,email.lastIndexOf("@"));
         return Users.builder()
                 .username(email)
+                .password("1234")
                 .pwdHash(pwdHash)
                 .pwdAlgorithm("SHA")
                 .useForwarding(0)

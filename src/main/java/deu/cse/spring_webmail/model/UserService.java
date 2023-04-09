@@ -84,7 +84,17 @@ public class UserService {
             throw new RuntimeException("Fatal error: " + me);
         }
     }
-
+    public boolean passwordCheck(String username,String password){
+        Users user = usersRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사용자 정보 없음"));             
+        return passwordEncoder.matches(password,user.getPassword());
+    }
+    public boolean oauth2Check(String username){
+        Users user = usersRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사용자 정보 없음"));       
+        if(user.getPassword().equals("1234")){
+            return true;
+        } 
+        return false;
+    }
 
     
     

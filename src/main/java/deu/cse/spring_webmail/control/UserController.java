@@ -7,6 +7,8 @@ package deu.cse.spring_webmail.control;
 import deu.cse.spring_webmail.dto.SignupForm;
 import deu.cse.spring_webmail.model.UserService;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
@@ -35,6 +38,30 @@ public class UserController {
     @GetMapping("/signup")
     public String signUp(){
         return "/sign_up";
+    }
+    @GetMapping("/mypage")
+    public String passwordCheck(HttpServletRequest request){
+        HttpSession session = request.getSession();
+        String userId = (String)session.getAttribute("userid");
+        boolean oauth2Check = false;
+         oauth2Check = userService.oauth2Check(userId);
+        if(oauth2Check == true){
+            return "/mypage";
+        }
+        return "/password_check";
+    }
+    @PostMapping("/mypage")
+    public String mypage(@RequestParam String password,HttpServletRequest request,Model model){
+        HttpSession session = request.getSession();
+        String userId = (String)session.getAttribute("userid");
+        boolean check = false;        
+        log.info("userid = {},password = {}",userId,password);
+        check = userService.passwordCheck(userId, password);       
+        if(check == true){
+            return "/mypage";
+        }
+        model.addAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
+        return "/password_check";
     }
     
     @PostMapping("/signup.do")
