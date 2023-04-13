@@ -35,7 +35,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * 초기 화면과 관리자 기능(사용자 추가, 삭제)에 대한 제어기
- *
+ * ss
  * @author skylo
  */
 @Controller
