@@ -27,8 +27,9 @@
         <br>
         <br>
         <br>
-        <div><a href="/webmail/signup" style="all:none"><input type="button" value="회원탈퇴" style="color: red"></a></div>
-        </div>
+        <form action ="delete-user.do" method="POST">
+            <input type="submit" value="회원탈퇴" style="color: red">
+        </form>       
         <%@include file="footer.jspf"%> 
     </body>
 </html>

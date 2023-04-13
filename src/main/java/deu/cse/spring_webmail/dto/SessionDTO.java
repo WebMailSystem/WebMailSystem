@@ -15,7 +15,7 @@ import lombok.Getter;
 @Getter
 public class SessionDTO {
     
-    
+    private Long id;
     private String username;
     private String pwdHash;
     private Role role;
@@ -27,7 +27,8 @@ public class SessionDTO {
     
     
     public SessionDTO(Users user){
-        this.username = user.getUsername();
+        this.id = user.getId();
+       this.username = user.getUsername();
         this.pwdHash = user.getPwdHash();
         this.role = user.getRole();
         this.pwdAlgorithm = user.getPwdAlgorithm();

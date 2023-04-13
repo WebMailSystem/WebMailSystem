@@ -22,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 
@@ -30,11 +31,13 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
     
     private final UsersRepository usersRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     
+    @Transactional
     public void signUp(SignupForm userDTO){
         String password = passwordEncoder.encode(userDTO.getPassword());
         String pwdHash = createPwdHash();
@@ -52,6 +55,10 @@ public class UserService {
     public boolean check(String username){
         return usersRepository.existsByUsername(username);
     }
+    @Transactional
+    public void deleteUser(Long userId){
+        usersRepository.deleteById(userId);
+    }
     private String createPwdHash(){
         String result = "";
         try {
@@ -63,8 +70,8 @@ public class UserService {
             log.error("exception = {}",ex);         
         }
         return result;
-    }
-    
+    }       
+
     private String digestString(String pass, String algorithm ) throws NoSuchAlgorithmException, UnsupportedEncodingException  {
 
         MessageDigest md;
