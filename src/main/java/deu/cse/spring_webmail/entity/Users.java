@@ -17,6 +17,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 import org.springframework.lang.Nullable;
 
@@ -42,7 +43,7 @@ public class Users {
     
     @Column(name = "pwdHash")
     private String pwdHash;
-    
+       
     @Column(name = "password")
     private String password;
     
@@ -64,5 +65,9 @@ public class Users {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Role role ;
+    
+    public void changePassword(String password){
+        this.password = password;
+    }
     
 }

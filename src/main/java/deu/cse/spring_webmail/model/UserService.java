@@ -59,6 +59,15 @@ public class UserService {
     public void deleteUser(Long userId){
         usersRepository.deleteById(userId);
     }
+    @Transactional
+    public void changePassword(Long userId,String password){
+       Users user = usersRepository.findById(userId).get();
+       String changePassword = passwordEncoder.encode(password);
+       log.info("changePassword = {}",changePassword);
+       user.changePassword(changePassword);
+       
+    }
+    
     private String createPwdHash(){
         String result = "";
         try {

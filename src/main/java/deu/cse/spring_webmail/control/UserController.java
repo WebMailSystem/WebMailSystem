@@ -6,6 +6,7 @@ package deu.cse.spring_webmail.control;
 
 import deu.cse.spring_webmail.dto.SessionDTO;
 import deu.cse.spring_webmail.dto.SignupForm;
+import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.model.UserService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -36,7 +37,7 @@ public class UserController {
     
     @GetMapping("/signup")
     public String signUp(){
-        return "/sign_up";
+        return "user/sign_up";
     }
     @GetMapping("/mypage")
     public String passwordCheck(HttpServletRequest request){
@@ -45,9 +46,9 @@ public class UserController {
         boolean oauth2Check = false;
          oauth2Check = userService.oauth2Check(userId);
         if(oauth2Check == true){
-            return "/mypage";
+            return "user/mypage";
         }
-        return "/password_check";
+        return "user/password_check";
     }
     @PostMapping("/mypage")
     public String mypage(@RequestParam String password,HttpServletRequest request,Model model){
@@ -57,10 +58,10 @@ public class UserController {
         log.info("userid = {},password = {}",userId,password);
         check = userService.passwordCheck(userId, password);       
         if(check == true){
-            return "/mypage";
+            return "user/mypage";
         }
         model.addAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
-        return "/password_check";
+        return "user/password_check";
     }
     
     @PostMapping("/signup.do")
@@ -69,7 +70,7 @@ public class UserController {
         if(result.hasErrors()){
             List<ObjectError> errors =result.getAllErrors();
             model.addAttribute("errors",errors);
-            return "/sign_up";
+            return "user/sign_up";
         }
         log.info("SignDTO ={}",user.getUsername());
        boolean check = userService.check(user.getUsername());
@@ -80,13 +81,25 @@ public class UserController {
        userService.signUp(user);
        return "redirect:/";
     }  
-    @PostMapping("delete-user.do")
+    @PostMapping("/delete-user.do")
     public String deleteUser(HttpServletRequest request){
         HttpSession session = request.getSession();
         SessionDTO user = (SessionDTO)session.getAttribute("user");
         log.info("id = {}",user.getId());              
         userService.deleteUser(user.getId());
         session.invalidate();
+        return "redirect:/";
+    }
+    @GetMapping("/change-password")
+    public String viewChangePassword(){
+        return "user/change_password";
+    }
+    @PostMapping("/change-password")
+    public String changePassword(HttpServletRequest request,@RequestParam String password){
+        HttpSession session = request.getSession();
+        SessionDTO user =(SessionDTO)session.getAttribute("user");
+        userService.changePassword(user.getId(), password);
+        session.invalidate();      
         return "redirect:/";
     }
 }

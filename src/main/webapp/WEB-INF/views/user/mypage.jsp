@@ -16,13 +16,13 @@
         <link type="text/css" rel="stylesheet" href="css/main_style.css" />
     </head>
     <body>
-        <%@include file="header.jspf"%>
+        <%@include file="../header.jspf"%>
      
         <div id="sidebar">
-            <jsp:include page="sidebar_menu.jsp" />
+            <jsp:include page="../sidebar_menu.jsp" />
         </div>
         <div class ="main">
-        <div><a href="/webmail/signup" style="all:none"><input type="button" value="비밀번호 변경"></a></div>
+        <div><a href="/webmail/change-password" style="all:none"><input type="button" value="비밀번호 변경"></a></div>
         <br>
         <br>
         <br>
@@ -30,6 +30,6 @@
         <form action ="delete-user.do" method="POST">
             <input type="submit" value="회원탈퇴" style="color: red">
         </form>       
-        <%@include file="footer.jspf"%> 
+        <%@include file="../footer.jspf"%> 
     </body>
 </html>

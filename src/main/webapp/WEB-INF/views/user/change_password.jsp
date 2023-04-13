@@ -12,19 +12,19 @@
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>로그인 화면</title>
+        <title>비밀번호 변경</title>
         <link type="text/css" rel="stylesheet" href="css/main_style.css" />
     </head>
     <body>
-        <%@include file="header.jspf"%>
+        <%@include file="../header.jspf"%>
       
 
         <div id="sidebar">
-            <jsp:include page="sidebar_menu.jsp" />
+            <jsp:include page="../sidebar_menu.jsp" />
         </div>
         <div id="passwordcheck_form">
             <!--<form method="POST" action="login.do?menu=<%= CommandType.LOGIN %>">-->
-            <p>마이페이지 이동을 위해 비밀번호를 입력하세요</p>
+            <p>변경할 비밀번호를 입력하세요</p>
             <form method="POST">
                 <c:if test="${!empty errorMessage}">
                     <div id="errorMessage">
@@ -41,6 +41,6 @@
         </div>
 
 
-        <%@include file="footer.jspf"%>
+        <%@include file="../footer.jspf"%>
     </body>
 </html>
