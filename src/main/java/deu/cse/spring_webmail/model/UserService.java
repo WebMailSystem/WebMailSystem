@@ -34,10 +34,11 @@ public class UserService {
     
     private final UsersRepository usersRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final SHAPasswordAlgorithm passwordAlgorithm;           
     
     public void signUp(SignupForm userDTO){
         String password = passwordEncoder.encode(userDTO.getPassword());
-        String pwdHash = createPwdHash();
+        String pwdHash = passwordAlgorithm.createPwdHash();
         Users user= Users.builder().username(userDTO.getUsername())
                 .pwdHash(pwdHash)
                 .password(password)
@@ -52,40 +53,5 @@ public class UserService {
     public boolean check(String username){
         return usersRepository.existsByUsername(username);
     }
-    private String createPwdHash(){
-        String result = "";
-        try {
-            result = digestString("1234","SHA");
-            return result;
-        } catch (NoSuchAlgorithmException ex) {
-            log.error("exception = {}",ex);
-        } catch (UnsupportedEncodingException ex) {
-            log.error("exception = {}",ex);         
-        }
-        return result;
-    }
-    
-    private String digestString(String pass, String algorithm ) throws NoSuchAlgorithmException, UnsupportedEncodingException  {
-
-        MessageDigest md;
-        ByteArrayOutputStream bos;
-
-        try {
-            md = MessageDigest.getInstance(algorithm);
-            log.info("md = {}",md.toString());
-            byte[] digest = md.digest(pass.getBytes("iso-8859-1"));
-            bos = new ByteArrayOutputStream();
-            OutputStream encodedStream = MimeUtility.encode(bos, "base64");
-            encodedStream.write(digest);
-            return bos.toString("iso-8859-1");
-        } catch (IOException ioe) {
-            throw new RuntimeException("Fatal error: " + ioe);
-        } catch (MessagingException me) {
-            throw new RuntimeException("Fatal error: " + me);
-        }
-    }
-
-
-    
-    
+     
 }

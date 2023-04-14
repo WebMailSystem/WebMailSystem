@@ -9,8 +9,6 @@ import deu.cse.spring_webmail.dto.SessionDTO;
 import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.repository.UsersRepository;
 import java.util.Collections;
-import java.util.Map;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +35,7 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
     private final UsersRepository usersRepository;
     private final HttpSession session;
     private final HttpServletRequest request;
+    private final SHAPasswordAlgorithm passwordAlgorithm;
 
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
@@ -47,7 +46,9 @@ public class CustomOAuth2UserService implements OAuth2UserService<OAuth2UserRequ
        String registrationId = userRequest.getClientRegistration().getRegistrationId();
        String userNameAttributeName = userRequest.getClientRegistration().getProviderDetails().getUserInfoEndpoint().getUserNameAttributeName();
        
-        OauthAttributes attributes = OauthAttributes.ofKakao("id", oAuth2User.getAttributes());
+       String sha = passwordAlgorithm.createPwdHash();
+       
+        OauthAttributes attributes = OauthAttributes.ofKakao("id", oAuth2User.getAttributes(),sha);
         Users user = saveOrUpdate(attributes);
             session.setAttribute("user", new SessionDTO(user));            
             session.setAttribute("userid",user.getUsername());
