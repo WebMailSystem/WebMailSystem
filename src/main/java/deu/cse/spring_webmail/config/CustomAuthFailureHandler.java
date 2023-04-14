@@ -31,6 +31,7 @@ public class CustomAuthFailureHandler extends SimpleUrlAuthenticationFailureHand
     public void onAuthenticationFailure(HttpServletRequest request,
             HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         String errorMessage;
+        log.info("예외 타입 확인 = {}",exception.getClass());
         if(exception instanceof BadCredentialsException){
             errorMessage = "아이디 또는 비밀번호가 맞지 않습니다.";        
         }else if(exception instanceof InternalAuthenticationServiceException){
