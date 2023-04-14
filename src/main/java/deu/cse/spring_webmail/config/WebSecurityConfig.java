@@ -4,16 +4,13 @@
  */
 package deu.cse.spring_webmail.config;
 
-import deu.cse.spring_webmail.entity.Role;
 import deu.cse.spring_webmail.model.CustomOAuth2UserService;
-import deu.cse.spring_webmail.model.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 
@@ -28,7 +25,7 @@ public class WebSecurityConfig {
     
     private final AuthenticationFailureHandler customFailureHandler;
     private final CustomOAuth2UserService customUserService;
-    
+           
     @Bean
     public BCryptPasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
