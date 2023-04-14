@@ -35,10 +35,13 @@ public class CustomUserDetailsService implements UserDetailsService{
      * @throws UsernameNotFoundException
      */
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException{
        
         Users user = usersRepository.findByUsername(username).orElseThrow(() 
                 -> new UsernameNotFoundException("유저 없음"));
+        if(user.getPassword().equals("1234") || user.getPassword() == "1234" ){
+             throw new UsernameNotFoundException("kakao아이디로 일반로그인");
+        }
         if(user != null){                       
             session.setAttribute("user", new SessionDTO(user));            
             session.setAttribute("userid",user.getUsername());
