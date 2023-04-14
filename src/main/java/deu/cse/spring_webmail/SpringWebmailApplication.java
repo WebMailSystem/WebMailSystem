@@ -1,5 +1,6 @@
 package deu.cse.spring_webmail;
 
+import deu.cse.spring_webmail.model.SHAPasswordAlgorithm;
 import java.io.IOException;
 import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
@@ -38,5 +39,8 @@ public class SpringWebmailApplication {
         
         return bean;
     }
-
+    @Bean
+    public SHAPasswordAlgorithm shaPasswordAlgorithm(){
+        return new SHAPasswordAlgorithm();
+    }
 }

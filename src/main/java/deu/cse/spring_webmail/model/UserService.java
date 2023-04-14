@@ -36,11 +36,12 @@ public class UserService {
     
     private final UsersRepository usersRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+    private final SHAPasswordAlgorithm passwordAlgorithm;           
     
     @Transactional
     public void signUp(SignupForm userDTO){
         String password = passwordEncoder.encode(userDTO.getPassword());
-        String pwdHash = createPwdHash();
+        String pwdHash = passwordAlgorithm.createPwdHash();
         Users user= Users.builder().username(userDTO.getUsername())
                 .pwdHash(pwdHash)
                 .password(password)
@@ -66,40 +67,7 @@ public class UserService {
        log.info("changePassword = {}",changePassword);
        user.changePassword(changePassword);
        
-    }
-    
-    private String createPwdHash(){
-        String result = "";
-        try {
-            result = digestString("1234","SHA");
-            return result;
-        } catch (NoSuchAlgorithmException ex) {
-            log.error("exception = {}",ex);
-        } catch (UnsupportedEncodingException ex) {
-            log.error("exception = {}",ex);         
-        }
-        return result;
-    }       
-
-    private String digestString(String pass, String algorithm ) throws NoSuchAlgorithmException, UnsupportedEncodingException  {
-
-        MessageDigest md;
-        ByteArrayOutputStream bos;
-
-        try {
-            md = MessageDigest.getInstance(algorithm);
-            log.info("md = {}",md.toString());
-            byte[] digest = md.digest(pass.getBytes("iso-8859-1"));
-            bos = new ByteArrayOutputStream();
-            OutputStream encodedStream = MimeUtility.encode(bos, "base64");
-            encodedStream.write(digest);
-            return bos.toString("iso-8859-1");
-        } catch (IOException ioe) {
-            throw new RuntimeException("Fatal error: " + ioe);
-        } catch (MessagingException me) {
-            throw new RuntimeException("Fatal error: " + me);
-        }
-    }
+    }   
     public boolean passwordCheck(String username,String password){
         Users user = usersRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사용자 정보 없음"));             
         return passwordEncoder.matches(password,user.getPassword());
@@ -111,7 +79,7 @@ public class UserService {
         } 
         return false;
     }
+    
+    
 
-    
-    
 }
