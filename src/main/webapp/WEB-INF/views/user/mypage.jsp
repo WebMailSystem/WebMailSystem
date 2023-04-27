@@ -8,12 +8,22 @@
 <%@page import="deu.cse.spring_webmail.control.CommandType"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>마이페이지 화면</title>
         <link type="text/css" rel="stylesheet" href="css/main_style.css" />
+        <script>
+            function checkButton(){
+                if(!confirm("회원탈퇴 하시겠습니까?")){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+        </script>
+        
+        
     </head>
     <body>
         <%@include file="../header.jspf"%>
@@ -27,7 +37,7 @@
         <br>
         <br>
         <br>
-        <form action ="delete-user.do" method="POST">
+        <form action ="delete-user.do" method="POST" onsubmit="return checkButton()">
             <input type="submit" value="회원탈퇴" style="color: red">
         </form>       
         <%@include file="../footer.jspf"%> 
