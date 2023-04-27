@@ -32,11 +32,14 @@
             <jsp:include page="../sidebar_menu.jsp" />
         </div>
         <div class ="main">
+        <c:if test="${empty oauth2Check}">
         <div><a href="/webmail/change-password" style="all:none"><input type="button" value="비밀번호 변경"></a></div>
+        </c:if>
         <br>
         <br>
         <br>
         <br>
+        <c:if test = "${!empty oauth2Check}"><span style="color: red">소셜 사용자는 탈퇴후 소셜에서도 연결을 끊어야 합니다.</span></c:if>
         <form action ="delete-user.do" method="POST" onsubmit="return checkButton()">
             <input type="submit" value="회원탈퇴" style="color: red">
         </form>       

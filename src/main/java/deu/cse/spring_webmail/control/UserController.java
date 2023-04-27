@@ -40,12 +40,14 @@ public class UserController {
         return "user/sign_up";
     }
     @GetMapping("/mypage")
-    public String passwordCheck(HttpServletRequest request){
+    public String passwordCheck(HttpServletRequest request,Model model){
         HttpSession session = request.getSession();
         String userId = (String)session.getAttribute("userid");
         boolean oauth2Check = false;
          oauth2Check = userService.oauth2Check(userId);
         if(oauth2Check == true){
+            log.info("왜 값이 안나옴??oauth2check = {}",oauth2Check);
+            model.addAttribute("oauth2Check",oauth2Check);            
             return "user/mypage";
         }
         return "user/password_check";
@@ -56,8 +58,8 @@ public class UserController {
         String userId = (String)session.getAttribute("userid");
         boolean check = false;        
         log.info("userid = {},password = {}",userId,password);
-        check = userService.passwordCheck(userId, password);       
-        if(check == true){
+        check = userService.passwordCheck(userId, password);        
+        if(check == true){        
             return "user/mypage";
         }
         model.addAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
