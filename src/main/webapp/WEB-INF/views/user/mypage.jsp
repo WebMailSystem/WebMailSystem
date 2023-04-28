@@ -8,7 +8,7 @@
 <%@page import="deu.cse.spring_webmail.control.CommandType"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>마이페이지 화면</title>

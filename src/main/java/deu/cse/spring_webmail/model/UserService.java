@@ -8,16 +8,6 @@ import deu.cse.spring_webmail.dto.SignupForm;
 import deu.cse.spring_webmail.entity.Role;
 import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.repository.UsersRepository;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeUtility;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -73,11 +63,8 @@ public class UserService {
         return passwordEncoder.matches(password,user.getPassword());
     }
     public boolean oauth2Check(String username){
-        Users user = usersRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사용자 정보 없음"));       
-        if(user.getPassword().equals("1234")){
-            return true;
-        } 
-        return false;
+        Users user = usersRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사용자 정보 없음"));               
+        return user.getPassword().equals("1234");
     }
     
     

@@ -32,7 +32,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
- 
+    private final String redirectIndex = "redirect:/";
     private final UserService userService;
     
     @GetMapping("/signup")
@@ -42,12 +42,10 @@ public class UserController {
     @GetMapping("/mypage")
     public String passwordCheck(HttpServletRequest request,Model model){
         HttpSession session = request.getSession();
-        String userId = (String)session.getAttribute("userid");
-        boolean oauth2Check = false;
-         oauth2Check = userService.oauth2Check(userId);
-        if(oauth2Check == true){
-            log.info("왜 값이 안나옴??oauth2check = {}",oauth2Check);
-            model.addAttribute("oauth2Check",oauth2Check);            
+        String userId = (String)session.getAttribute("userid");                
+        
+        if(userService.oauth2Check(userId)){           
+            model.addAttribute("oauth2Check",true);            
             return "user/mypage";
         }
         return "user/password_check";
@@ -55,11 +53,9 @@ public class UserController {
     @PostMapping("/mypage")
     public String mypage(@RequestParam String password,HttpServletRequest request,Model model){
         HttpSession session = request.getSession();
-        String userId = (String)session.getAttribute("userid");
-        boolean check = false;        
-        log.info("userid = {},password = {}",userId,password);
-        check = userService.passwordCheck(userId, password);        
-        if(check == true){        
+        String userId = (String)session.getAttribute("userid");              
+        
+        if(userService.passwordCheck(userId, password)){        
             return "user/mypage";
         }
         model.addAttribute("errorMessage", "비밀번호가 일치하지 않습니다.");
@@ -81,7 +77,7 @@ public class UserController {
            return "redirect:/signup";
        }
        userService.signUp(user);
-       return "redirect:/";
+       return redirectIndex;
     }  
     @PostMapping("/delete-user.do")
     public String deleteUser(HttpServletRequest request){
@@ -90,7 +86,7 @@ public class UserController {
         log.info("id = {}",user.getId());              
         userService.deleteUser(user.getId());
         session.invalidate();
-        return "redirect:/";
+        return redirectIndex;
     }
     @GetMapping("/change-password")
     public String viewChangePassword(){
@@ -102,6 +98,6 @@ public class UserController {
         SessionDTO user =(SessionDTO)session.getAttribute("user");
         userService.changePassword(user.getId(), password);
         session.invalidate();      
-        return "redirect:/";
+        return redirectIndex;
     }
 }

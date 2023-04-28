@@ -9,7 +9,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 
-<html>
+<html lang="ko">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>비밀번호 변경</title>
@@ -22,8 +22,7 @@
         <div id="sidebar">
             <jsp:include page="../sidebar_menu.jsp" />
         </div>
-        <div id="passwordcheck_form">
-            <!--<form method="POST" action="login.do?menu=<%= CommandType.LOGIN %>">-->
+        <div id="passwordcheck_form">            
             <p>변경할 비밀번호를 입력하세요</p>
             <form method="POST">
                 <c:if test="${!empty errorMessage}">
