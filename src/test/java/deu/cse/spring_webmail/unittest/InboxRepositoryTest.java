@@ -52,6 +52,10 @@ public class InboxRepositoryTest {
          String result = formatter.getMessageTable(messages);
          log.info("result = {} ",result);
     }
-    
+    @Test
+    void inboxTest2() throws MessagingException{
+        List<Inbox>inboxs = repository.findInboxByRepositoryNameAndMessageBodyContaining("test","mm");
+        log.info("inboxs count = {}",inboxs.size());
+    }
     
 }

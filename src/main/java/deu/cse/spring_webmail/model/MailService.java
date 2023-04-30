@@ -31,7 +31,7 @@ public class MailService {
     
     public String search(String username,String type,String keyword) throws MessagingException{
         
-        List<Inbox> inboxs = inboxRepository.findByIdRepositoryNameAndSenderContains(username,keyword);
+        List<Inbox> inboxs = checkSearchType(username, type, keyword);
         List<Message> messageList = new ArrayList<>();
         for(Inbox inbox : inboxs){
             log.info("inbox sender = {}",inbox.getSender());
@@ -46,5 +46,12 @@ public class MailService {
         }
          MessageFormatter formatter = new MessageFormatter(username);  //3.5
          return formatter.getMessageTable(messages);                
+    }
+    private List<Inbox> checkSearchType(String username,String type,String keyword){
+        if(type.equals("sender")){
+            return inboxRepository.findByIdRepositoryNameAndSenderContains(username,keyword);
+        }else{
+            return inboxRepository.findInboxByRepositoryNameAndMessageBodyContaining(username,keyword);
+        }
     }
 }

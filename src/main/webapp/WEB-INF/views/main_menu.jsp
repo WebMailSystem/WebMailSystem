@@ -14,6 +14,8 @@
 <!-- 제어기에서 처리하면 로직 관련 소스 코드 제거 가능!
 <jsp:useBean id="pop3" scope="page" class="deu.cse.spring_webmail.model.Pop3Agent" />
 <%
+            response.setHeader("Cache-Control","no-cache");
+            response.setHeader("Pragma","no-cache");
             pop3.setHost((String) session.getAttribute("host"));
             pop3.setUserid((String) session.getAttribute("userid"));
             pop3.setPassword((String) session.getAttribute("password"));
@@ -44,8 +46,8 @@
             <div>
               <form action="" method="POST">
                 <select name ="searchType">
-                    <option value="none">=== 선택 ===</option>
-                    <option value="sender" selected>송신자</option>
+                    <option value="none" selected>=== 선택 ===</option>
+                    <option value="sender">송신자</option>
                     <option value="title">제목</option>
                     <option value="all">제목 + 송신자</option>                    
                 </select>
