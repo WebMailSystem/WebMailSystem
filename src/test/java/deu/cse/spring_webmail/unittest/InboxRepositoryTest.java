@@ -57,5 +57,9 @@ public class InboxRepositoryTest {
         List<Inbox>inboxs = repository.findInboxByRepositoryNameAndMessageBodyContaining("test","mm");
         log.info("inboxs count = {}",inboxs.size());
     }
-    
+    @Test
+    void inboxTest3(){
+        List<Inbox>inboxs = repository.findByRepositoryNameAndSenderContainsOrMessageBodyContaining("test", "wjd");
+        log.info("inboxs count = {}", inboxs.size());
+    }           
 }

@@ -48,8 +48,8 @@
                 <select name ="searchType">
                     <option value="none" selected>=== 선택 ===</option>
                     <option value="sender">송신자</option>
-                    <option value="title">제목</option>
-                    <option value="all">제목 + 송신자</option>                    
+                    <option value="contents">내용</option>
+                    <option value="all">내용 + 송신자</option>                    
                 </select>
                 <input type="text" name = "keyword"/>
                 <input type ="submit" value="검색"/>

@@ -50,8 +50,10 @@ public class MailService {
     private List<Inbox> checkSearchType(String username,String type,String keyword){
         if(type.equals("sender")){
             return inboxRepository.findByIdRepositoryNameAndSenderContains(username,keyword);
-        }else{
+        }else if(type.equals("contents")){
             return inboxRepository.findInboxByRepositoryNameAndMessageBodyContaining(username,keyword);
+        }else{
+            return inboxRepository.findByRepositoryNameAndSenderContainsOrMessageBodyContaining(username, keyword);
         }
     }
 }

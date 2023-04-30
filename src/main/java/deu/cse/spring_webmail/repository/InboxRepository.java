@@ -19,6 +19,9 @@ public interface InboxRepository extends JpaRepository<Inbox, InboxId>{
     
     List<Inbox> findByIdRepositoryNameAndSenderContains(String repositoryName,String sender);
     
-    @Query("SELECT i FROM inbox i WHERE i.id.repositoryName = :repositoryName AND i.messageBody LIKE CONCAT('%','Subject:','%',:title,'%')")
-    List<Inbox> findInboxByRepositoryNameAndMessageBodyContaining(@Param("repositoryName")String repositoryName,@Param("title") String title);
+    @Query("SELECT i FROM inbox i WHERE i.id.repositoryName = :repositoryName AND i.messageBody LIKE CONCAT('%','Subject:','%',:contents,'%')")
+    List<Inbox> findInboxByRepositoryNameAndMessageBodyContaining(@Param("repositoryName")String repositoryName,@Param("contents") String contents);
+    
+    @Query("SELECT i FROM inbox i WHERE i.id.repositoryName = :repositoryName AND (i.messageBody LIKE CONCAT('%','Subject:','%',:keyword,'%') OR i.sender LIKE CONCAT('%',:keyword,'%'))")
+    List<Inbox> findByRepositoryNameAndSenderContainsOrMessageBodyContaining(@Param("repositoryName")String repositoryName,@Param("keyword")String keyword);
 }
