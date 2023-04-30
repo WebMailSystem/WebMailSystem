@@ -23,7 +23,7 @@
             <jsp:include page="../sidebar_menu.jsp" />
         </div>
         <div id="passwordcheck_form">
-            <!--<form method="POST" action="login.do?menu=<%= CommandType.LOGIN %>">-->
+            
             <p>마이페이지 이동을 위해 비밀번호를 입력하세요</p>
             <form method="POST">
                 <c:if test="${!empty errorMessage}">

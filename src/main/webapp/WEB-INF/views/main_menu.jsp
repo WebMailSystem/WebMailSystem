@@ -14,6 +14,8 @@
 <!-- 제어기에서 처리하면 로직 관련 소스 코드 제거 가능!
 <jsp:useBean id="pop3" scope="page" class="deu.cse.spring_webmail.model.Pop3Agent" />
 <%
+            response.setHeader("Cache-Control","no-cache");
+            response.setHeader("Pragma","no-cache");
             pop3.setHost((String) session.getAttribute("host"));
             pop3.setUserid((String) session.getAttribute("userid"));
             pop3.setPassword((String) session.getAttribute("password"));
@@ -38,8 +40,22 @@
             <jsp:include page="sidebar_menu.jsp" />
         </div>
 
+
         <!-- 메시지 삭제 링크를 누르면 바로 삭제되어 실수할 수 있음. 해결 방법은? -->
         <div id="main">
+            <div>
+              <form action="" method="POST">
+                <select name ="searchType">
+                    <option value="none" selected>=== 선택 ===</option>
+                    <option value="sender">송신자</option>
+                    <option value="contents">내용</option>
+                    <option value="all">내용 + 송신자</option>                    
+                </select>
+                <input type="text" name = "keyword"/>
+                <input type ="submit" value="검색"/>
+                </form>
+                <br>
+            </div>
             ${messageList}
         </div>
 

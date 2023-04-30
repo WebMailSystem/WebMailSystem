@@ -49,6 +49,7 @@ public class WebSecurityConfig {
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")
+                .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true)
                 .and()
                 .exceptionHandling().accessDeniedPage("/")

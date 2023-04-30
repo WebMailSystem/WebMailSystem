@@ -5,7 +5,9 @@ import java.net.URLEncoder;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
@@ -27,10 +29,16 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class CustomAuthFailureHandler extends SimpleUrlAuthenticationFailureHandler {
 
+    @Autowired
+    private HttpSession session;
+    
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
             HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
         String errorMessage;
+        
+        session.invalidate();
+        
         log.info("예외 타입 확인 = {}",exception.getClass());
         if(exception instanceof BadCredentialsException){
             errorMessage = "아이디 또는 비밀번호가 맞지 않습니다.";        

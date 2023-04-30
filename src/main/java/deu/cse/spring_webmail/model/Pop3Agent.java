@@ -109,7 +109,7 @@ public class Pop3Agent {
             // From, To, Cc, Bcc, ReplyTo, Subject & Date
             fp.add(FetchProfile.Item.ENVELOPE);
             folder.fetch(messages, fp);
-
+            
             MessageFormatter formatter = new MessageFormatter(userid);  //3.5
             result = formatter.getMessageTable(messages);   // 3.6
 
