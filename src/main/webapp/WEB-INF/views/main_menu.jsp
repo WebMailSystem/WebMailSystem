@@ -38,8 +38,22 @@
             <jsp:include page="sidebar_menu.jsp" />
         </div>
 
+
         <!-- 메시지 삭제 링크를 누르면 바로 삭제되어 실수할 수 있음. 해결 방법은? -->
         <div id="main">
+            <div>
+              <form action="" method="POST">
+                <select name ="searchType">
+                    <option value="none">=== 선택 ===</option>
+                    <option value="sender" selected>송신자</option>
+                    <option value="title">제목</option>
+                    <option value="all">제목 + 송신자</option>                    
+                </select>
+                <input type="text" name = "keyword"/>
+                <input type ="submit" value="검색"/>
+                </form>
+                <br>
+            </div>
             ${messageList}
         </div>
 
