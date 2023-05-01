@@ -16,6 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  *
@@ -30,11 +32,12 @@ public class Pop3Agent {
     @Getter @Setter private Store store;
     @Getter @Setter private String excveptionType;
     @Getter @Setter private HttpServletRequest request;
-    
+        
     // 220612 LJM - added to implement REPLY
     @Getter private String sender;
     @Getter private String subject;
     @Getter private String body;
+      
     
     public Pop3Agent(String host, String userid, String password) {
         this.host = host;
@@ -56,7 +59,7 @@ public class Pop3Agent {
         }
     }
 
-    public boolean deleteMessage(int msgid, boolean really_delete) {
+    public boolean deleteMessage(int msgid, boolean really_delete,RecyclebinService recyclebinService) {
         boolean status = false;
 
         if (!connectToStore()) {
@@ -71,8 +74,20 @@ public class Pop3Agent {
 
             // Message에 DELETED flag 설정
             Message msg = folder.getMessage(msgid);
+            
+             
+            //휴지통기능          
+            log.info("userid = {}, request = {}, msg = {}",userid,request,msg);
+            MessageFormatter formatter = new MessageFormatter(userid);                       
+            formatter.setRequest(request);  // 210308 LJM - added                       
+            formatter.getMessage(msg);
+            sender = formatter.getSender();  // 220612 LJM - added                       
+            subject = formatter.getSubject();
+            log.info("sender  = {}, subject = {}",sender,subject);
+            recyclebinService.moveInboxToRecyclebin(userid, sender, subject);                  
+            
             msg.setFlag(Flags.Flag.DELETED, really_delete);
-
+                                    
             // 폴더에서 메시지 삭제
             // Message [] expungedMessage = folder.expunge();
             // <-- 현재 지원 안 되고 있음. 폴더를 close()할 때 expunge해야 함.
@@ -138,12 +153,13 @@ public class Pop3Agent {
             Message message = folder.getMessage(n);
 
             MessageFormatter formatter = new MessageFormatter(userid);
+            
             formatter.setRequest(request);  // 210308 LJM - added
             result = formatter.getMessage(message);
             sender = formatter.getSender();  // 220612 LJM - added
             subject = formatter.getSubject();
             body = formatter.getBody();
-
+            
             folder.close(true);
             store.close();
         } catch (Exception ex) {

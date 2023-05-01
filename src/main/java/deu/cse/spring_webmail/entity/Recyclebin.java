@@ -4,26 +4,26 @@
  */
 package deu.cse.spring_webmail.entity;
 
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Lob;
-
-import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 /**
  *
  * @author 정기석
  */
-@Entity(name = "inbox")
+@Entity(name = "recyclebin")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Inbox {
+public class Recyclebin {
     
     @EmbeddedId
     private InboxId id;
