@@ -65,6 +65,7 @@ public class ReadController {
         session.setAttribute("subject", pop3.getSubject());
         session.setAttribute("body", pop3.getBody());
         model.addAttribute("msg", msg);
+        model.addAttribute("msgid", msgid);
         return "/read_mail/show_message";
     }
     
