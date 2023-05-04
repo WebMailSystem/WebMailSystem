@@ -26,11 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class RecyclebinService {
     private final InboxRepository inboxRepository;
-    private final RecyclebinRepository recyclebinRepository;
+    private final RecyclebinRepository recyclebinRepository;   
     
     @Transactional
-    public void moveInboxToRecyclebin(String repositoryName, String sender, String subject,String body, String date){
-        Inbox inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, subject, body);
+    public void moveInboxToRecyclebin(String repositoryName, String sender, String subject,String[] messagdId, String date){
+        String id = messagdId[0];
+        Inbox inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, subject, id);
          log.info("inbox info ={}",inbox.getId().getMessageName());
         Recyclebin recyclebin = Recyclebin.builder().inboxId(inbox.getId())
                 .lastUpdated(inbox.getLastUpdated())
@@ -61,6 +62,22 @@ public class RecyclebinService {
     @Transactional
     public void deleteMail(Long recyclebinId){
         recyclebinRepository.deleteById(recyclebinId);
+    }
+    @Transactional
+    public void restoreMail(Long recyclebinId){
+        Recyclebin recyclebin = recyclebinRepository.findById(recyclebinId).get();
+        Inbox inbox = Inbox.builder().id(recyclebin.getInboxId())
+                .errorMessage(recyclebin.getErrorMessage())
+                .lastUpdated(recyclebin.getLastUpdated())
+                .messageAttributes(recyclebin.getMessageAttributes())
+                .messageBody(recyclebin.getMessageBody())
+                .messageState(recyclebin.getMessageState())
+                .recipients(recyclebin.getRecipients())
+                .remoteAddr(recyclebin.getRemoteAddr())
+                .remoteHost(recyclebin.getRemoteHost())
+                .sender(recyclebin.getSender()).build();
+        inboxRepository.save(inbox);
+        recyclebinRepository.delete(recyclebin);
     }
     
 }

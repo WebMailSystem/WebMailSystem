@@ -34,7 +34,13 @@ public class RecyclebinController {
     }
     @GetMapping("/recyclebin/delete/{recyclebinId}")
     public String deleteMail(@PathVariable("recyclebinId") Long recyclebinId){
-                recyclebinService.deleteMail(recyclebinId);
-                return "redirect:/recyclebin";
+        recyclebinService.deleteMail(recyclebinId);
+        return "redirect:/recyclebin";
+                
+    }
+    @GetMapping("/recyclebin/restore/{recyclebinId}")
+    public String restoreMail(@PathVariable("recyclebinId") Long recyclebinId){
+        recyclebinService.restoreMail(recyclebinId);
+        return "redirect:/recyclebin";
     }
 }

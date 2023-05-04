@@ -25,6 +25,7 @@ public class MessageFormatter {
     @Getter private String sender;
     @Getter private String subject;
     @Getter private String body;
+    @Getter private String[] messageId;
     
     
 
@@ -75,6 +76,7 @@ public class MessageFormatter {
         sender = parser.getFromAddress();
         subject = parser.getSubject();
         body = parser.getBody();
+        messageId = parser.getMessageId();
         
         
 

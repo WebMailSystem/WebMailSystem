@@ -38,6 +38,7 @@ public class Pop3Agent {
     @Getter private String subject;
     @Getter private String body;
     @Getter private String date;
+    @Getter private String[] messageId;
     
       
     
@@ -73,23 +74,22 @@ public class Pop3Agent {
 //            Folder folder = store.getDefaultFolder();
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_WRITE);
-
+            
             // Message에 DELETED flag 설정
             Message msg = folder.getMessage(msgid);
-            
-             log.info("1");
-            //휴지통기능          
-            log.info("userid = {}, request = {}, msg = {}",userid,request,msg);
+                        
+            //휴지통기능                      
             MessageFormatter formatter = new MessageFormatter(userid);                       
-            log.info("2");
+            
             formatter.setRequest(request);  // 210308 LJM - added                       
             formatter.getMessage(msg);            
             sender = formatter.getSender();  // 220612 LJM - added                                   
             subject = formatter.getSubject();            
             body = formatter.getBody();            
-            date =  msg.getSentDate().toString();            
-            log.info("sender  = {}, subject = {}, body = {}, date = {}, recyclebinService = {}",sender,subject,body,date,recyclebinService);
-            recyclebinService.moveInboxToRecyclebin(userid, sender, subject,body,date);                  
+            date =  msg.getSentDate().toString();
+            messageId = formatter.getMessageId();
+                        
+            recyclebinService.moveInboxToRecyclebin(userid, sender, subject,messageId,date);                  
             
             msg.setFlag(Flags.Flag.DELETED, really_delete);
                                     
@@ -164,6 +164,9 @@ public class Pop3Agent {
             sender = formatter.getSender();  // 220612 LJM - added
             subject = formatter.getSubject();
             body = formatter.getBody();
+            messageId = formatter.getMessageId();
+                        
+            
             
             folder.close(true);
             store.close();
