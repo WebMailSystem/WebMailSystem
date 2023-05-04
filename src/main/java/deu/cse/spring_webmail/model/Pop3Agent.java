@@ -37,6 +37,8 @@ public class Pop3Agent {
     @Getter private String sender;
     @Getter private String subject;
     @Getter private String body;
+    @Getter private String date;
+    
       
     
     public Pop3Agent(String host, String userid, String password) {
@@ -75,16 +77,19 @@ public class Pop3Agent {
             // Message에 DELETED flag 설정
             Message msg = folder.getMessage(msgid);
             
-             
+             log.info("1");
             //휴지통기능          
             log.info("userid = {}, request = {}, msg = {}",userid,request,msg);
             MessageFormatter formatter = new MessageFormatter(userid);                       
+            log.info("2");
             formatter.setRequest(request);  // 210308 LJM - added                       
-            formatter.getMessage(msg);
-            sender = formatter.getSender();  // 220612 LJM - added                       
-            subject = formatter.getSubject();
-            log.info("sender  = {}, subject = {}",sender,subject);
-            recyclebinService.moveInboxToRecyclebin(userid, sender, subject);                  
+            formatter.getMessage(msg);            
+            sender = formatter.getSender();  // 220612 LJM - added                                   
+            subject = formatter.getSubject();            
+            body = formatter.getBody();            
+            date =  msg.getSentDate().toString();            
+            log.info("sender  = {}, subject = {}, body = {}, date = {}, recyclebinService = {}",sender,subject,body,date,recyclebinService);
+            recyclebinService.moveInboxToRecyclebin(userid, sender, subject,body,date);                  
             
             msg.setFlag(Flags.Flag.DELETED, really_delete);
                                     

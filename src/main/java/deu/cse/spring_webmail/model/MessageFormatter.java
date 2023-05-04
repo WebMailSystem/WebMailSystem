@@ -25,6 +25,8 @@ public class MessageFormatter {
     @Getter private String sender;
     @Getter private String subject;
     @Getter private String body;
+    
+    
 
 
     public String getMessageTable(Message[] messages) {
@@ -73,6 +75,8 @@ public class MessageFormatter {
         sender = parser.getFromAddress();
         subject = parser.getSubject();
         body = parser.getBody();
+        
+        
 
         buffer.append("보낸 사람: " + parser.getFromAddress() + " <br>");
         buffer.append("받은 사람: " + parser.getToAddress() + " <br>");

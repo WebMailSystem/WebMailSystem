@@ -6,8 +6,12 @@ package deu.cse.spring_webmail.entity;
 
 import java.time.LocalDateTime;
 import javax.persistence.Column;
-import javax.persistence.EmbeddedId;
+import javax.persistence.Embedded;
+
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
 import javax.persistence.Lob;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,8 +29,13 @@ import lombok.NoArgsConstructor;
 @Builder
 public class Recyclebin {
     
-    @EmbeddedId
-    private InboxId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Long id; 
+    
+    @Embedded
+    private InboxId inboxId;
 
     @Column(name = "message_state")
     private String messageState;
@@ -56,6 +65,11 @@ public class Recyclebin {
 
     @Column(name = "last_updated")
     private LocalDateTime lastUpdated;
-
+    
+    @Column(name = "datetime")
+    private String date;
+    
+    @Column(name = "title")
+    private String title;
     // Getters and setters omitted for brevity
 }

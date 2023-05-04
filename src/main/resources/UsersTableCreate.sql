@@ -20,3 +20,21 @@ id bigint auto_increment
 , role VARCHAR(255)
 , PRIMARY KEY(id)
 )
+
+CREATE TABLE recyclebin (
+            id bigint auto_increment,
+            message_name varchar (200) NOT NULL,
+            repository_name varchar (100) NOT NULL,
+            message_state varchar (30) NOT NULL ,
+            error_message varchar (200) NULL ,
+            sender varchar (255) NULL ,
+            recipients text NOT NULL ,
+            remote_host varchar (255) NOT NULL ,
+            remote_addr varchar (20) NOT NULL ,
+            message_body longblob NOT NULL ,
+            message_attributes longblob NULL ,
+            last_updated datetime NOT NULL,
+            datetime varchar(60) NOT NULL,
+            title varchar(60) NOT NULL,
+            PRIMARY KEY (id)
+        )
