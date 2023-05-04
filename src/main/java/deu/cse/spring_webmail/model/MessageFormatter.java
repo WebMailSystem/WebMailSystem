@@ -99,6 +99,7 @@ public class MessageFormatter {
         return buffer.toString();
     }
     
+    
     public void setRequest(HttpServletRequest request) {
         this.request = request;
     }

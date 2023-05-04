@@ -43,4 +43,12 @@ public class RecyclebinController {
         recyclebinService.restoreMail(recyclebinId);
         return "redirect:/recyclebin";
     }
+    @GetMapping("/recyclebin/{recyclebinId}")
+    public String getMessage(@PathVariable("recyclebinId")Long recyclebinId,Model model,HttpServletRequest request){
+        
+        String msg = recyclebinService.getMessage(recyclebinId,request);
+        model.addAttribute("msg", msg);
+      
+        return "/read_mail/recyclebin_show_message";
+    }
 }

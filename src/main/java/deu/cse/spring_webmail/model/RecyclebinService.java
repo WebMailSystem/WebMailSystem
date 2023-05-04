@@ -9,8 +9,15 @@ import deu.cse.spring_webmail.entity.Inbox;
 import deu.cse.spring_webmail.entity.Recyclebin;
 import deu.cse.spring_webmail.repository.InboxRepository;
 import deu.cse.spring_webmail.repository.RecyclebinRepository;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.List;
+import java.util.Properties;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -78,6 +85,20 @@ public class RecyclebinService {
                 .sender(recyclebin.getSender()).build();
         inboxRepository.save(inbox);
         recyclebinRepository.delete(recyclebin);
+    }
+    
+    public String getMessage(Long recyclebinId,HttpServletRequest request){
+        Recyclebin recyclebin = recyclebinRepository.findById(recyclebinId).get();                                
+        InputStream inputStream = new ByteArrayInputStream(recyclebin.getMessageBody());
+        MimeMessage mimeMessage = null;
+        try {
+            mimeMessage = new MimeMessage(Session.getDefaultInstance(new Properties()), inputStream);
+        } catch (MessagingException ex) {
+            log.error("getMessage error!");
+        }
+        MessageFormatter formatter = new MessageFormatter(recyclebin.getInboxId().getRepositoryName());  //3.5
+        formatter.setRequest(request);
+        return formatter.getMessage(mimeMessage);
     }
     
 }
