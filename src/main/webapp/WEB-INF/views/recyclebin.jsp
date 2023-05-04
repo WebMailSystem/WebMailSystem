@@ -11,7 +11,7 @@
 
 <!DOCTYPE html>
 
-<!-- 제어기에서 처리하면 로직 관련 소스 코드 제거 가능!
+
 <jsp:useBean id="pop3" scope="page" class="deu.cse.spring_webmail.model.Pop3Agent" />
 <%
             response.setHeader("Cache-Control","no-cache");
@@ -22,7 +22,7 @@
 %>
 -->
 
-<html>
+<html lang="ko">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>휴지통 화면</title>
@@ -45,6 +45,7 @@
         <div id="main">
             <h2> -----휴지통-----</h2>
             <table>
+                <caption>휴지통 메일 리스트</caption>
                 <tr>
                     <th> No.</th>
                     <th> 보낸사람</th>
