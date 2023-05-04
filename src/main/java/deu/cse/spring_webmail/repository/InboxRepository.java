@@ -17,6 +17,8 @@ import org.springframework.data.repository.query.Param;
  */
 public interface InboxRepository extends JpaRepository<Inbox, InboxId>{
     
+    void deleteByIdRepositoryName(String repositoryName);
+    
     List<Inbox> findByIdRepositoryNameAndSenderContains(String repositoryName,String sender);
     
     @Query("SELECT i FROM inbox i WHERE i.id.repositoryName = :repositoryName AND i.messageBody LIKE CONCAT('%','Subject:','%',:contents,'%')")

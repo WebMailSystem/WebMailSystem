@@ -18,4 +18,6 @@ public interface RecyclebinRepository extends JpaRepository<Recyclebin, Long>{
     
     @Query("SELECT r FROM recyclebin r WHERE r.inboxId.repositoryName = :repositoryName")
     List<Recyclebin> findByRepositoryName(String repositoryName);
+    
+    void deleteByinboxIdRepositoryName(String repositoryName);
 }

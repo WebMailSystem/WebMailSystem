@@ -7,6 +7,8 @@ package deu.cse.spring_webmail.model;
 import deu.cse.spring_webmail.dto.SignupForm;
 import deu.cse.spring_webmail.entity.Role;
 import deu.cse.spring_webmail.entity.Users;
+import deu.cse.spring_webmail.repository.InboxRepository;
+import deu.cse.spring_webmail.repository.RecyclebinRepository;
 import deu.cse.spring_webmail.repository.UsersRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
     
     private final UsersRepository usersRepository;
+    private final InboxRepository inboxRepository;
+    private final RecyclebinRepository recyclebinRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final SHAPasswordAlgorithm passwordAlgorithm;           
     
@@ -47,8 +51,10 @@ public class UserService {
         return usersRepository.existsByUsername(username);
     }
     @Transactional
-    public void deleteUser(Long userId){
+    public void deleteUser(Long userId,String username){
         usersRepository.deleteById(userId);
+        inboxRepository.deleteByIdRepositoryName(username);
+        recyclebinRepository.deleteByinboxIdRepositoryName(username);                
     }
     @Transactional
     public void changePassword(Long userId,String password){
