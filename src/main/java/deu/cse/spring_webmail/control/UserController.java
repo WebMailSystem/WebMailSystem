@@ -84,7 +84,7 @@ public class UserController {
         HttpSession session = request.getSession();
         SessionDTO user = (SessionDTO)session.getAttribute("user");
         log.info("id = {}",user.getId());              
-        userService.deleteUser(user.getId());
+        userService.deleteUser(user.getId(),user.getUsername());
         session.invalidate();
         return redirectIndex;
     }
