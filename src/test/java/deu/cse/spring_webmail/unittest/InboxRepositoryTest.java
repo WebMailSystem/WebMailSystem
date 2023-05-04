@@ -5,11 +5,16 @@
 package deu.cse.spring_webmail.unittest;
 
 import deu.cse.spring_webmail.entity.Inbox;
+import deu.cse.spring_webmail.entity.Recyclebin;
 import deu.cse.spring_webmail.model.MessageFormatter;
+import deu.cse.spring_webmail.model.Pop3Agent;
 import deu.cse.spring_webmail.repository.InboxRepository;
+import deu.cse.spring_webmail.repository.RecyclebinRepository;
+import jakarta.mail.Folder;
 import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
+import jakarta.mail.Store;
 import jakarta.mail.internet.MimeMessage;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -30,6 +35,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 class InboxRepositoryTest {
     
     @Autowired InboxRepository repository;
+    @Autowired RecyclebinRepository recyclebinRepository;
     
     
     @Test
@@ -61,5 +67,24 @@ class InboxRepositoryTest {
     void inboxTest3(){
         List<Inbox>inboxs = repository.findByRepositoryNameAndSenderContainsOrMessageBodyContaining("test", "wjd");
         log.info("inboxs count = {}", inboxs.size());
-    }           
+    }
+    @Test
+    void messageToInbox(){        
+
+        Inbox inbox = repository.findByRepositoryNameAndSenderAndMessageBody("test2","test","wta","dd");
+        log.info("inbox info ={}",inbox.getId().getMessageName());
+        Recyclebin recyclebin = Recyclebin.builder().inboxId(inbox.getId())
+                .lastUpdated(inbox.getLastUpdated())
+                .errorMessage(inbox.getErrorMessage())
+                .messageAttributes(inbox.getMessageAttributes())
+                .messageBody(inbox.getMessageBody())
+                .messageState(inbox.getMessageState())
+                .sender(inbox.getSender())
+                .recipients(inbox.getRecipients())
+                .remoteAddr(inbox.getRemoteAddr())
+                .remoteHost(inbox.getRemoteHost()).build();
+        recyclebinRepository.save(recyclebin);
+        
+    }
+   
 }

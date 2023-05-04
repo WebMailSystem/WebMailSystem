@@ -7,7 +7,7 @@ package deu.cse.spring_webmail.control;
 import deu.cse.spring_webmail.dto.SessionDTO;
 import deu.cse.spring_webmail.entity.Role;
 import deu.cse.spring_webmail.entity.Users;
-import deu.cse.spring_webmail.model.MailService;
+import deu.cse.spring_webmail.model.InboxService;
 import deu.cse.spring_webmail.model.Pop3Agent;
 import deu.cse.spring_webmail.model.UserAdminAgent;
 import java.awt.image.BufferedImage;
@@ -53,7 +53,7 @@ public class SystemController {
     @Autowired
     private HttpServletRequest request;
     @Autowired
-    private final MailService mailService;
+    private final InboxService inboxService;
 
     @Value("${root.id}")
     private String ROOT_ID;
@@ -108,7 +108,7 @@ public class SystemController {
         log.info("type = {}, keyword = {}",searchType,keyword);
          String messageList = "";
         try{
-        messageList = mailService.search((String)session.getAttribute("userid"), searchType, keyword);
+        messageList = inboxService.search((String)session.getAttribute("userid"), searchType, keyword);
         }catch(Exception e){
             log.error("e",e);
         }

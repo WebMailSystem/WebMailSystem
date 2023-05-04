@@ -5,6 +5,7 @@
 package deu.cse.spring_webmail.control;
 
 import deu.cse.spring_webmail.model.Pop3Agent;
+import deu.cse.spring_webmail.model.RecyclebinService;
 import jakarta.mail.internet.MimeUtility;
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +42,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 public class ReadController {
 
+    @Autowired
+    private RecyclebinService recyclebinService;
     @Autowired
     private ServletContext ctx;
     @Autowired
@@ -115,13 +118,14 @@ public class ReadController {
     @GetMapping("/delete_mail.do")
     public String deleteMailDo(@RequestParam("msgid") Integer msgId, RedirectAttributes attrs) {
         log.debug("delete_mail.do: msgid = {}", msgId);
-        
+
         String host = (String) session.getAttribute("host");
         String userid = (String) session.getAttribute("userid");
         String password = (String) session.getAttribute("password");
 
-        Pop3Agent pop3 = new Pop3Agent(host, userid, password);
-        boolean deleteSuccessful = pop3.deleteMessage(msgId, true);
+        Pop3Agent pop3 = new Pop3Agent(host, userid, password);        
+        pop3.setRequest(request);
+        boolean deleteSuccessful = pop3.deleteMessage(msgId, true,recyclebinService);
         if (deleteSuccessful) {
             attrs.addFlashAttribute("msg", "메시지 삭제를 성공하였습니다.");
         } else {

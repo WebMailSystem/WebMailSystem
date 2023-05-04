@@ -25,6 +25,9 @@ public class MessageFormatter {
     @Getter private String sender;
     @Getter private String subject;
     @Getter private String body;
+    @Getter private String[] messageId;
+    
+    
 
 
     public String getMessageTable(Message[] messages) {
@@ -73,6 +76,9 @@ public class MessageFormatter {
         sender = parser.getFromAddress();
         subject = parser.getSubject();
         body = parser.getBody();
+        messageId = parser.getMessageId();
+        
+        
 
         buffer.append("보낸 사람: " + parser.getFromAddress() + " <br>");
         buffer.append("받은 사람: " + parser.getToAddress() + " <br>");
@@ -92,6 +98,7 @@ public class MessageFormatter {
 
         return buffer.toString();
     }
+    
     
     public void setRequest(HttpServletRequest request) {
         this.request = request;

@@ -26,8 +26,12 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class MailService {
+public class InboxService {
     private final InboxRepository inboxRepository;
+    
+    public Inbox findById(){
+        return null;
+    }
     
     public String search(String username,String type,String keyword) throws MessagingException{
         
