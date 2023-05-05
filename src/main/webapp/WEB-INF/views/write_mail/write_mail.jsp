@@ -72,9 +72,9 @@
             </form>
         </div>
 
-        <%@include file="../footer.jspf"%>
-        <script src="https://cdn.ckeditor.com/ckeditor5/37.0.1/classic/ckeditor.js"></script>
-        <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/translations/ko.js"></script>
+        <%@include file="../footer.jspf"%>        
+        <script src="https://cdn.ckeditor.com/ckeditor5/37.0.1/classic/ckeditor.js" integrity="sha512-ICu1H+8v4PhUt4ABYxy3cQA+uLij3HExUA7c4KZLgG2BTK1OzwWdbK5d1nqlEp4kBbVBszJcug+zCTV77mCWNg==" crossorigin="anonymous"></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/translations/ko.js" integrity="sha512-b8e0sUAMKXH7dVSSfQkBufDFGjaUcY/lpxMZijaW8nX5CeFmfvU9XroLnXt/pfRjWwKrDWt0pqEobetBpvqohQ==" crossorigin="anonymous"></script>
         <script>
                 ClassicEditor.create( document.querySelector( '#editor' ), {
                     toolbar: {
