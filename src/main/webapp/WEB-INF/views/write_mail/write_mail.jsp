@@ -15,6 +15,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>메일 쓰기 화면</title>
         <link type="text/css" rel="stylesheet" href="css/main_style.css" />
+        <style>
+            .ck-editor__editable { height: 400px; }
+        </style>
     </head>
     <body>
         <%@include file="../header.jspf"%>
@@ -29,9 +32,7 @@
                 <table>
                     <tr>
                         <td> 수신 </td>
-                        <td> <input type="text" name="to" size="80"
-                                    value="${!empty param['sender'] ? param['sender'] : ''}"
-            <!--    value=<%=request.getParameter("recv") == null ? "" : request.getParameter("recv")%>  -->
+                        <td> <input type="text" name="to" size="80" value="${!empty param['sender'] ? param['sender'] : ''}">            
                         </td>
                     </tr>
                     <tr>
@@ -48,7 +49,7 @@
                     </tr>
                     <tr>  <%-- TextArea    --%>
                         <td colspan="2">
-                            <textarea rows="15" name="body" cols="80">${!empty param['sender'] ?
+                            <textarea rows="15" name="body" cols="80" id="editor">${!empty param['sender'] ?
 "
 
 
@@ -72,5 +73,21 @@
         </div>
 
         <%@include file="../footer.jspf"%>
+        <script src="https://cdn.ckeditor.com/ckeditor5/37.0.1/classic/ckeditor.js"></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/translations/ko.js"></script>
+        <script>
+                ClassicEditor.create( document.querySelector( '#editor' ), {
+                    toolbar: {
+                            items: [                                
+                                'heading',
+                                '|', 'bold', 'italic',
+                                '|', 'insertTable', 'bulletedList', 'numberedList',
+                                '|', ,'undo', 'redo',
+                                ]
+                        },
+                        language: "ko"
+                    
+                } );
+        </script>
     </body>
 </html>

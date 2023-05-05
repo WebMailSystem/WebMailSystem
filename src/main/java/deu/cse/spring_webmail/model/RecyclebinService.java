@@ -38,7 +38,7 @@ public class RecyclebinService {
     @Transactional
     public void moveInboxToRecyclebin(String repositoryName, String sender, String subject,String[] messagdId, String date){
         String id = messagdId[0];
-        Inbox inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, subject, id);
+        Inbox inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, id);
          log.info("inbox info ={}",inbox.getId().getMessageName());
         Recyclebin recyclebin = Recyclebin.builder().inboxId(inbox.getId())
                 .lastUpdated(inbox.getLastUpdated())
