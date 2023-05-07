@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.stream.Stream;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -113,25 +115,35 @@ public class ReadController {
         }
 
         return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
-    }
+    }    
     
-    @GetMapping("/delete_mail.do")
-    public String deleteMailDo(@RequestParam("msgid") Integer msgId, RedirectAttributes attrs) {
-        log.debug("delete_mail.do: msgid = {}", msgId);
-
-        String host = (String) session.getAttribute("host");
-        String userid = (String) session.getAttribute("userid");
-        String password = (String) session.getAttribute("password");
-
-        Pop3Agent pop3 = new Pop3Agent(host, userid, password);        
-        pop3.setRequest(request);
-        boolean deleteSuccessful = pop3.deleteMessage(msgId, true,recyclebinService);
-        if (deleteSuccessful) {
-            attrs.addFlashAttribute("msg", "메시지 삭제를 성공하였습니다.");
-        } else {
-            attrs.addFlashAttribute("msg", "메시지 삭제를 실패하였습니다.");
-        }
+    @PostMapping("/delete_multiple_mail.do")
+    public String deleteMultipleMail (@RequestParam(value = "deleteMultiple", required = false) String checkboxValue, RedirectAttributes attrs) {
         
+        // 체크박스 null 체크 해야함
+        try {
+            if(!checkboxValue.isEmpty()) {
+                int[] indexs = Stream.of(checkboxValue.split(",")).mapToInt(Integer::parseInt).toArray();
+                
+                String host = (String) session.getAttribute("host");
+                String userid = (String) session.getAttribute("userid");
+                String password = (String) session.getAttribute("password");
+                
+                for (int index : indexs) {
+                    Pop3Agent pop3 = new Pop3Agent(host, userid, password);        
+                    pop3.setRequest(request);
+                    boolean deleteSuccessful = pop3.deleteMessage(index, true, recyclebinService);
+                    if (deleteSuccessful) {
+                        attrs.addFlashAttribute("msg", "메시지 삭제를 성공하였습니다.");
+                    } else {
+                        attrs.addFlashAttribute("msg", "메시지 삭제를 실패하였습니다.");
+                    }
+                }
+            }    
+        } catch (NullPointerException e) {
+            attrs.addFlashAttribute("msg", "선택된 메일이 없습니다.");
+        }
+
         return "redirect:main_menu";
     }
 }

@@ -71,19 +71,21 @@ class InboxRepositoryTest {
     @Test
     void messageToInbox(){        
 
-//        Inbox inbox = repository.findByRepositoryNameAndSenderAndMessageBody("test2","test","wta","dd");
-//        log.info("inbox info ={}",inbox.getId().getMessageName());
-//        Recyclebin recyclebin = Recyclebin.builder().inboxId(inbox.getId())
-//                .lastUpdated(inbox.getLastUpdated())
-//                .errorMessage(inbox.getErrorMessage())
-//                .messageAttributes(inbox.getMessageAttributes())
-//                .messageBody(inbox.getMessageBody())
-//                .messageState(inbox.getMessageState())
-//                .sender(inbox.getSender())
-//                .recipients(inbox.getRecipients())
-//                .remoteAddr(inbox.getRemoteAddr())
-//                .remoteHost(inbox.getRemoteHost()).build();
-//        recyclebinRepository.save(recyclebin);
+
+        Inbox inbox = repository.findByRepositoryNameAndSenderAndMessageBody("test2","test","dd");
+        log.info("inbox info ={}",inbox.getId().getMessageName());
+        Recyclebin recyclebin = Recyclebin.builder().inboxId(inbox.getId())
+                .lastUpdated(inbox.getLastUpdated())
+                .errorMessage(inbox.getErrorMessage())
+                .messageAttributes(inbox.getMessageAttributes())
+                .messageBody(inbox.getMessageBody())
+                .messageState(inbox.getMessageState())
+                .sender(inbox.getSender())
+                .recipients(inbox.getRecipients())
+                .remoteAddr(inbox.getRemoteAddr())
+                .remoteHost(inbox.getRemoteHost()).build();
+        recyclebinRepository.save(recyclebin);
+
         
     }
    
