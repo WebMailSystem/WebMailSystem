@@ -32,15 +32,20 @@ public class MessageFormatter {
 
     public String getMessageTable(Message[] messages) {
         StringBuilder buffer = new StringBuilder();
-
+        
         // 메시지 제목 보여주기
-        buffer.append("<table>");  // table start
+        buffer.append("<form action=\"delete_multiple_mail.do\""
+                + " method=\"post\">"
+        );
+        buffer.append("<table class=\"checkbox_group\">");  // table start
+        
+        
         buffer.append("<tr> "
                 + " <th> No. </td> "
                 + " <th> 보낸 사람 </td>"
                 + " <th> 제목 </td>     "
                 + " <th> 보낸 날짜 </td>   "
-                + " <th> 삭제 </td>   "
+                + " <th onclick=\"selectAll(this)\"> 삭제 </th>"
                 + " </tr>");
 
         for (int i = messages.length - 1; i >= 0; i--) {
@@ -55,12 +60,23 @@ public class MessageFormatter {
                     + " <a href=show_message?msgid=" + (i + 1) + " title=\"메일 보기\"> "
                     + parser.getSubject() + "</a> </td>"
                     + " <td id=date>" + parser.getSentDate() + "</td>"
-                    + " <td id=delete>"
-                    + "<a href=delete_mail.do"
-                    + "?msgid=" + (i + 1) + "> 삭제 </a>" + "</td>"
+                    + " <td>"
+                    + "<input type=\"checkbox\" name=\"deleteMultiple\" value=\"" + (i + 1) + "\" "
+                    + "</td>"
                     + " </tr>");
         }
-        buffer.append("</table>");
+        
+        buffer.append("<tr> "
+                + " <th>  </td> "
+                + " <th>  </td>"
+                + " <th>  </td>     "
+                + " <th>  </td>   "
+                + " <th>  "
+                + " <button type=\"submit\">삭제하기</button>"
+                + "</td>   "
+                + " </tr>");
+        buffer.append("</form>");
+        buffer.append("</table>");        
 
         return buffer.toString();
 //        return "MessageFormatter 테이블 결과";
