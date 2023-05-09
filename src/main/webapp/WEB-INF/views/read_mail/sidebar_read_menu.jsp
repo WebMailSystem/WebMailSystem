@@ -19,7 +19,7 @@
             <strong>사용자: <%= session.getAttribute("userid") %> </strong>
         </span> <br> <br>
         
-        <p><a href="delete_mail.do?msgid=${msgid}"> 메일 삭제 </a></p>
+        <p><a href="delete_detail_mail.do?msgid=${msgid}"> 메일 삭제 </a></p>
         <p><a href="write_mail?sender=<%= session.getAttribute("sender") %>"> 답장 하기 </a></p>
         <p><a href="main_menu"> 이전 메뉴로 </a></p>
     </body>
