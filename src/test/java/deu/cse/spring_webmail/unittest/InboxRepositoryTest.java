@@ -71,6 +71,7 @@ class InboxRepositoryTest {
     @Test
     void messageToInbox(){        
 
+
         Inbox inbox = repository.findByRepositoryNameAndSenderAndMessageBody("test2","test","dd");
         log.info("inbox info ={}",inbox.getId().getMessageName());
         Recyclebin recyclebin = Recyclebin.builder().inboxId(inbox.getId())
@@ -84,6 +85,7 @@ class InboxRepositoryTest {
                 .remoteAddr(inbox.getRemoteAddr())
                 .remoteHost(inbox.getRemoteHost()).build();
         recyclebinRepository.save(recyclebin);
+
         
     }
    

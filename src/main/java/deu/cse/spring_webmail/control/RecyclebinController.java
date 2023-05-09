@@ -4,7 +4,9 @@
  */
 package deu.cse.spring_webmail.control;
 
+import deu.cse.spring_webmail.dto.RecyclebinDTO;
 import deu.cse.spring_webmail.model.RecyclebinService;
+import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,9 @@ public class RecyclebinController {
     public String recyclebin(HttpServletRequest request,Model model){
         HttpSession session = request.getSession();
         String userId = (String)session.getAttribute("userid");        
-         model.addAttribute("lists", recyclebinService.findByRepositoryName(userId));
+        List<RecyclebinDTO> lists = recyclebinService.findByRepositoryName(userId);
+         model.addAttribute("lists",lists);
+         model.addAttribute("count",lists.size());
         return "recyclebin";
     }
     @GetMapping("/recyclebin/delete/{recyclebinId}")

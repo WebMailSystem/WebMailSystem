@@ -10,6 +10,10 @@ import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.repository.InboxRepository;
 import deu.cse.spring_webmail.repository.RecyclebinRepository;
 import deu.cse.spring_webmail.repository.UsersRepository;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -30,7 +34,8 @@ public class UserService {
     private final InboxRepository inboxRepository;
     private final RecyclebinRepository recyclebinRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final SHAPasswordAlgorithm passwordAlgorithm;           
+    private final SHAPasswordAlgorithm passwordAlgorithm;
+    private final HttpSession session;
     
     @Transactional
     public void signUp(SignupForm userDTO){
@@ -52,6 +57,10 @@ public class UserService {
     }
     @Transactional
     public void deleteUser(Long userId,String username){
+        if(oauth2Check(username)){
+            log.info("access_token = {}",(String)session.getAttribute("access_token"));
+            unlinkKakao((String)session.getAttribute("access_token"));
+        }
         usersRepository.deleteById(userId);
         inboxRepository.deleteByIdRepositoryName(username);
         recyclebinRepository.deleteByinboxIdRepositoryName(username);                
@@ -73,6 +82,18 @@ public class UserService {
         return user.getPassword().equals("1234");
     }
     
-    
-
+    private void unlinkKakao(String access_Token){
+        log.info("실행되는지 확인 token = {}",access_Token);
+        String uri = "https://kapi.kakao.com/v1/user/unlink";
+        try{
+            URL url = new URL(uri);
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Authorization", "Bearer " + access_Token);            
+            log.info("responseCode = {}",conn.getResponseCode());
+        }catch(Exception e){
+            log.error("error :",e);
+        }
+        
+    }    
 }
