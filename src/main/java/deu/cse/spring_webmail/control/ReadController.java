@@ -117,6 +117,25 @@ public class ReadController {
         return new ResponseEntity<Resource>(resource, headers, HttpStatus.OK);
     }    
     
+    @GetMapping("delete_detail_mail.do")
+    public String deleteDetailMail(@RequestParam(value = "msgid") int msgid, RedirectAttributes attrs) {
+        String host = (String) session.getAttribute("host");
+        String userid = (String) session.getAttribute("userid");
+        String password = (String) session.getAttribute("password");
+        Pop3Agent pop3 = new Pop3Agent(host, userid, password);        
+        pop3.setRequest(request);
+        
+        boolean deleteSuccessful = pop3.deleteMessage(msgid, true, recyclebinService);
+        
+        if (deleteSuccessful) {
+            attrs.addFlashAttribute("msg", "메시지 삭제를 성공하였습니다.");
+        } else {
+            attrs.addFlashAttribute("msg", "메시지 삭제를 실패하였습니다.");
+        }
+        
+        return "redirect:main_menu";
+    }        
+    
     @PostMapping("/delete_multiple_mail.do")
     public String deleteMultipleMail (@RequestParam(value = "deleteMultiple", required = false) String checkboxValue, RedirectAttributes attrs) {
         
@@ -128,10 +147,10 @@ public class ReadController {
                 String host = (String) session.getAttribute("host");
                 String userid = (String) session.getAttribute("userid");
                 String password = (String) session.getAttribute("password");
+                Pop3Agent pop3 = new Pop3Agent(host, userid, password);        
+                pop3.setRequest(request);
                 
-                for (int index : indexs) {
-                    Pop3Agent pop3 = new Pop3Agent(host, userid, password);        
-                    pop3.setRequest(request);
+                for (int index : indexs) {                    
                     boolean deleteSuccessful = pop3.deleteMessage(index, true, recyclebinService);
                     if (deleteSuccessful) {
                         attrs.addFlashAttribute("msg", "메시지 삭제를 성공하였습니다.");

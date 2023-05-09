@@ -54,15 +54,18 @@
                     <th> 복구</th>
                     <th> 삭제</th>
                 </tr>
-            <c:forEach var = "recyclebinDTO" items = "${lists}">
+                <% int i =  (Integer) request.getAttribute("count");%>
+            <c:forEach var = "recyclebinDTO" items = "${lists}">            
                 <tr>
-                    <td id ="no">${recyclebinDTO.id}</td>
-                    <td id ="sender">${recyclebinDTO.sender}</td>
+                    <td id ="no"><%= i%></td>
+                    <c:set var="sender" value="${fn:substringBefore(recyclebinDTO.sender, '@')}" />
+                    <td id="sender">${sender}</td>
                     <td id ="subject"><a href="recyclebin/${recyclebinDTO.id}">${recyclebinDTO.title}</a></td>
                     <td id ="date">${recyclebinDTO.date}</td>
                     <td id ="restore"><a href="recyclebin/restore/${recyclebinDTO.id}">복구</a> </td>
                     <td id ="delete"><a href="recyclebin/delete/${recyclebinDTO.id}">삭제</a> </td>
                 </tr>
+                <% i--; %>
             </c:forEach>
             </table>
         </div>
