@@ -56,6 +56,15 @@ public class Inbox {
 
     @Column(name = "last_updated")
     private LocalDateTime lastUpdated;
+    
+    @Column(name = "favorite")
+    private boolean favorite;
 
     // Getters and setters omitted for brevity
+    public void addFavorite(){
+        this.favorite = true;
+    }
+    public void deleteFavorite(){
+        this.favorite = false;
+    }
 }

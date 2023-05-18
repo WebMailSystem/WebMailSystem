@@ -8,6 +8,7 @@ import jakarta.mail.FetchProfile;
 import jakarta.mail.Flags;
 import jakarta.mail.Folder;
 import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.Store;
 import java.util.Properties;
@@ -59,6 +60,41 @@ public class Pop3Agent {
             status = false;  // for clarity
         } finally {
             return status;
+        }
+    }
+    
+    public void addFavorite(Integer msgid,InboxService inboxService) throws MessagingException{       
+        boolean status = false;
+
+        if (!connectToStore()) {
+            log.info("addFavorite status = {}",status);
+        }
+        try{           
+            // Folder 설정
+//            Folder folder = store.getDefaultFolder();
+            log.info("0");
+            Folder folder = store.getFolder("INBOX");
+            folder.open(Folder.READ_WRITE);
+            log.info("1");
+            // Message에 DELETED flag 설정
+            Message msg = folder.getMessage(msgid);
+            log.info("2");
+            //휴지통기능                      
+            MessageFormatter formatter = new MessageFormatter(userid);                       
+            log.info("3");
+            formatter.setRequest(request);  // 210308 LJM - added                       
+            formatter.getMessage(msg);            
+            sender = formatter.getSender();  // 220612 LJM - added                                   
+            subject = formatter.getSubject();            
+            body = formatter.getBody();            
+            date =  msg.getSentDate().toString();
+            messageId = formatter.getMessageId();
+            log.info("4");
+            inboxService.addFavorite(userid, sender, subject, messageId);
+            folder.close(true);  // expunge == true
+            store.close();
+        }catch (Exception ex) {
+            log.error("addMessage() error: {}", ex.getMessage());
         }
     }
 

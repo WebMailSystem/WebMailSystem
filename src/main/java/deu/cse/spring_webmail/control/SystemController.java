@@ -10,11 +10,14 @@ import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.model.InboxService;
 import deu.cse.spring_webmail.model.Pop3Agent;
 import deu.cse.spring_webmail.model.UserAdminAgent;
+import jakarta.mail.MessagingException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -239,5 +242,31 @@ public class SystemController {
         }
         return null;
     }
-
+    
+    @GetMapping("/favorite")
+    public String favorite(Model model,HttpSession session){
+        String messageList = "";
+        var username = (String)session.getAttribute("userid");
+        try{
+        messageList = inboxService.favorites(username);
+        }catch(Exception e){
+            log.error("e",e);
+        }
+        model.addAttribute("messageList", messageList);                                
+        return "favorite";
+    }
+    @GetMapping("favorite.do")
+    public String addfavorite(@RequestParam("msgid") Integer msgid){       
+        Pop3Agent pop3 = new Pop3Agent();       
+        pop3.setHost((String) session.getAttribute("host"));
+        pop3.setUserid((String) session.getAttribute("userid"));
+        pop3.setPassword((String) session.getAttribute("password"));
+        pop3.setRequest(request);
+        try {
+            pop3.addFavorite(msgid,inboxService);
+        } catch (MessagingException ex) {
+            Logger.getLogger(SystemController.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return "redirect:/favorite";
+    }
 }
