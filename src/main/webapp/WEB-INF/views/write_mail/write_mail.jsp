@@ -29,7 +29,8 @@
         <div id="main">
             <%-- <jsp:include page="mail_send_form.jsp" /> --%>
             <form enctype="multipart/form-data" method="POST" action="write_mail.do" >
-                <table>
+                <table summary="메일쓰기">
+                    <tr><th scope="col" colspan="2">메일 쓰기</th></tr>
                     <tr>
                         <td> 수신 </td>
                         <td> <input type="text" name="to" size="80" value="${!empty param['sender'] ? param['sender'] : ''}">            
