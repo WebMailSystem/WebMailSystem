@@ -38,3 +38,6 @@ CREATE TABLE recyclebin (
             title varchar(60) NOT NULL,
             PRIMARY KEY (id)
         )
+
+
+alter table inbox add favorite tinyint(1) default false;
