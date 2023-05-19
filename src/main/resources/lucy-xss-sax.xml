@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-<config xmlns="http://www.nhncorp.com/lucy-xss"
-	extends="lucy-xss-default-sax.xml">
-
+<!-- version 20180725-1 -->
+<config xmlns="http://www.nhncorp.com/lucy-xss" extends="lucy-xss-default-sax.xml">
 	<elementRule>
 		<element name="body" disable="true" /> <!-- <BODY ONLOAD=alert("XSS")>, <BODY BACKGROUND="javascript:alert('XSS')"> -->
 		<element name="embed" disable="true" />
@@ -13,8 +11,13 @@
 		<element name="style" disable="true" />
 		<element name="link" disable="true" />
 		<element name="base" disable="true" />
+                <element name="p" disable="false" />
+                <element name="textarea" disable="false" />
+                <element name="strong" disable="false" />
+                <element name="i" disable="false" />
+                <element name="ul" disable="false" />
+                <element name="li" disable="false" />
 	</elementRule>
-	
 	<attributeRule>
 		<attribute name="data" base64Decoding="true">
 			<notAllowedPattern><![CDATA[(?i:s\\*c\\*r\\*i\\*p\\*t\\*:)]]></notAllowedPattern>
@@ -32,8 +35,9 @@
 			<notAllowedPattern><![CDATA[&[#\\%x]+[\da-fA-F][\da-fA-F]+]]></notAllowedPattern>
 		</attribute>
 		<attribute name="href">
-  		 <notAllowedPattern><![CDATA[(?i:j\\*a\\*v\\*a\\*s\\*c\\*r\\*i\\*p\\*t\\*:)]]></notAllowedPattern>
- 		</attribute>
+			<notAllowedPattern><![CDATA[(?i:j\\*a\\*v\\*a\\*s\\*c\\*r\\*i\\*p\\*t\\*:)]]></notAllowedPattern>
+			<notAllowedPattern><![CDATA[&[#\\%x]+[\da-fA-F][\da-fA-F]+]]></notAllowedPattern>
+		</attribute>
+		<attribute name="formaction" disable="true"/>
 	</attributeRule>
-
 </config>

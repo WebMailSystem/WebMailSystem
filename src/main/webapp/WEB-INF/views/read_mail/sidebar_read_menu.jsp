@@ -20,6 +20,7 @@
         </span> <br> <br>
         
         <p><a href="delete_detail_mail.do?msgid=${msgid}"> 메일 삭제 </a></p>
+        <p><a href="add-favorite.do?msgid=${msgid}"> 즐겨찾기 추가 </a></p>
         <p><a href="write_mail?sender=<%= session.getAttribute("sender") %>"> 답장 하기 </a></p>
         <p><a href="main_menu"> 이전 메뉴로 </a></p>
     </body>

@@ -8,6 +8,7 @@ import jakarta.mail.FetchProfile;
 import jakarta.mail.Flags;
 import jakarta.mail.Folder;
 import jakarta.mail.Message;
+import jakarta.mail.MessagingException;
 import jakarta.mail.Session;
 import jakarta.mail.Store;
 import java.util.Properties;
@@ -16,8 +17,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 /**
  *
@@ -60,6 +59,47 @@ public class Pop3Agent {
         } finally {
             return status;
         }
+    }
+    
+    public void addFavorite(int msgid,InboxService inboxService) throws MessagingException{       
+        boolean status = false;
+
+        if (!connectToStore()) {
+            log.info("addFavorite status = {}",status);
+        }
+        try{           
+            // Folder 설정
+//            Folder folder = store.getDefaultFolder();
+            
+            Folder folder = store.getFolder("INBOX");
+            folder.open(Folder.READ_WRITE);
+            
+            // Message에 DELETED flag 설정
+            Message msg = folder.getMessage(msgid);
+            
+            //휴지통기능                      
+            MessageFormatter formatter = new MessageFormatter(userid);                       
+            
+            formatter.setRequest(request);  // 210308 LJM - added                       
+            formatter.getMessage(msg);            
+            sender = formatter.getSender();  // 220612 LJM - added                                                         
+            body = formatter.getBody();            
+            date =  msg.getSentDate().toString();
+            messageId = formatter.getMessageId();           
+            
+           log.info("추가");
+           inboxService.addFavorite(userid, sender, messageId);
+            
+            
+            folder.close(true);  // expunge == true
+            store.close();
+        }catch (Exception ex) {
+            log.error("addMessage() error: {}", ex.getMessage());
+        }
+    }
+    
+    public void deleteFavorite(String msgId,InboxService inboxService,String sender){
+           inboxService.deleteFavorite(userid, sender, msgId);
     }
 
     public boolean deleteMessage(int msgid, boolean really_delete,RecyclebinService recyclebinService) {
@@ -141,43 +181,32 @@ public class Pop3Agent {
         } finally {
             return result;
         }
-    }
-
-    public String getMessage(int n) {
+    }   
+    public String getMessage(String messageIds,InboxService inboxservice,String sender) {
         String result = "POP3  서버 연결이 되지 않아 메시지를 볼 수 없습니다.";
 
         if (!connectToStore()) {
             log.error("POP3 connection failed!");
             return result;
-        }
-
+        }                                    
         try {
-            Folder folder = store.getFolder("INBOX");
-            folder.open(Folder.READ_ONLY);
-
-            Message message = folder.getMessage(n);
-
-            MessageFormatter formatter = new MessageFormatter(userid);
-            
+            Message message = inboxservice.getMessage(userid, messageIds, sender);
+            MessageFormatter formatter = new MessageFormatter(userid);            
             formatter.setRequest(request);  // 210308 LJM - added
+            log.info("@@result = {}",formatter.getMessage(message));
             result = formatter.getMessage(message);
             sender = formatter.getSender();  // 220612 LJM - added
             subject = formatter.getSubject();
             body = formatter.getBody();
             messageId = formatter.getMessageId();
-                        
-            
-            
-            folder.close(true);
-            store.close();
-        } catch (Exception ex) {
+        } catch (MessagingException ex) {
             log.error("Pop3Agent.getMessageList() : exception = {}", ex);
             result = "Pop3Agent.getMessage() : exception = " + ex;
-        } finally {
+        }finally{
             return result;
-        }
+        }                                 
     }
-
+ 
     private boolean connectToStore() {
         boolean status = false;
         Properties props = System.getProperties();

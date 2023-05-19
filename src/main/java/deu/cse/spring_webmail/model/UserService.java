@@ -11,7 +11,6 @@ import deu.cse.spring_webmail.repository.InboxRepository;
 import deu.cse.spring_webmail.repository.RecyclebinRepository;
 import deu.cse.spring_webmail.repository.UsersRepository;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
@@ -52,18 +51,18 @@ public class UserService {
                 .role(Role.USER).build();
         usersRepository.save(user);
     }
-    public boolean check(String username){
-        return usersRepository.existsByUsername(username);
+    public boolean check(String userName){
+        return usersRepository.existsByUsername(userName);
     }
     @Transactional
-    public void deleteUser(Long userId,String username){
-        if(oauth2Check(username)){
+    public void deleteUser(Long userId,String userName){
+        if(oauth2Check(userName)){
             log.info("access_token = {}",(String)session.getAttribute("access_token"));
             unlinkKakao((String)session.getAttribute("access_token"));
         }
         usersRepository.deleteById(userId);
-        inboxRepository.deleteByIdRepositoryName(username);
-        recyclebinRepository.deleteByinboxIdRepositoryName(username);                
+        inboxRepository.deleteByIdRepositoryName(userName);
+        recyclebinRepository.deleteByinboxIdRepositoryName(userName);                
     }
     @Transactional
     public void changePassword(Long userId,String password){
@@ -73,23 +72,22 @@ public class UserService {
        user.changePassword(changePassword);
        
     }   
-    public boolean passwordCheck(String username,String password){
-        Users user = usersRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사용자 정보 없음"));             
+    public boolean passwordCheck(String userName,String password){
+        Users user = usersRepository.findByUsername(userName).orElseThrow(() -> new RuntimeException("사용자 정보 없음"));             
         return passwordEncoder.matches(password,user.getPassword());
     }
-    public boolean oauth2Check(String username){
-        Users user = usersRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사용자 정보 없음"));               
+    public boolean oauth2Check(String userName){
+        Users user = usersRepository.findByUsername(userName).orElseThrow(() -> new RuntimeException("사용자 정보 없음"));               
         return user.getPassword().equals("1234");
     }
     
-    private void unlinkKakao(String access_Token){
-        log.info("실행되는지 확인 token = {}",access_Token);
+    private void unlinkKakao(String accessToken){        
         String uri = "https://kapi.kakao.com/v1/user/unlink";
         try{
             URL url = new URL(uri);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.setRequestMethod("POST");
-            conn.setRequestProperty("Authorization", "Bearer " + access_Token);            
+            conn.setRequestProperty("Authorization", "Bearer " + accessToken);            
             log.info("responseCode = {}",conn.getResponseCode());
         }catch(Exception e){
             log.error("error :",e);
