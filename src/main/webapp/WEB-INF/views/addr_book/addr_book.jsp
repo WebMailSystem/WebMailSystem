@@ -9,7 +9,8 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<html>
+<html lang="ko">
+    
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>주소록 화면</title>
@@ -32,6 +33,7 @@
 
         <form  method="POST" >
             <table border="1">
+                <caption>주소록 조회 테이블</caption>
                 <thead>
                     <tr>
                         <th>선택</th>

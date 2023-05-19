@@ -10,7 +10,7 @@
 <%-- @taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" --%>
 
 
-<html>
+<html lang="ko">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>메일 쓰기 화면</title>

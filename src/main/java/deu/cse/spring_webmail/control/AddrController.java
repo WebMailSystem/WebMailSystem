@@ -45,17 +45,13 @@ public class AddrController {
     }
 
     @GetMapping("/insert_addr")
-    public String insertAddr(HttpServletRequest request) {
-        HttpSession session = request.getSession();
-
+    public String insertAddr() {
         return "/addr_book/insert_addr";
     }
 
     @PostMapping("/insertAddr.do")
     public String insertAddressBook(HttpServletRequest request, @RequestParam("nick") String nick, @RequestParam("email") String email, RedirectAttributes attrs) {
         HttpSession session = request.getSession();
-
-        System.out.println(repository.findByUsername((String) session.getAttribute("userid")));
 
         String str;
 
