@@ -32,6 +32,7 @@
     <br> <br>
     <form action="insertAddr.do" method="POST" name="insert" onsubmit="return validateForm()" required>
         <table border="0">
+            <th colspan="2">주소록 추가</th>
             <tbody>
                 <tr>
                     <td>이름</td>
@@ -43,10 +44,8 @@
                 </tr>
                 <tr>
                     <td colspan="2">
-            <center>
                 <input type="submit" value="추가" />
                 <input type="reset" value="초기화" />
-            </center>
             </td>
             </tr>
             </tbody>
