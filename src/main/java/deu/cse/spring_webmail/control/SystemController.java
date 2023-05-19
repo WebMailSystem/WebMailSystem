@@ -255,8 +255,8 @@ public class SystemController {
         model.addAttribute("messageList", messageList);                                
         return "favorite";
     }
-    @GetMapping("favorite.do")
-    public String addfavorite(@RequestParam("msgid") Integer msgid){       
+    @GetMapping("add-favorite.do")
+    public String addFavorite(@RequestParam("msgid") int msgid){       
         Pop3Agent pop3 = new Pop3Agent();       
         pop3.setHost((String) session.getAttribute("host"));
         pop3.setUserid((String) session.getAttribute("userid"));
@@ -268,5 +268,19 @@ public class SystemController {
             Logger.getLogger(SystemController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "redirect:/favorite";
+    }
+    @GetMapping("delete-favorite.do")
+    public String deleteFavorite(@RequestParam("messageId") String msgid,@RequestParam("sender") String sender){
+        log.info("delete-favorite.do");
+        Pop3Agent pop3 = new Pop3Agent();       
+        pop3.setHost((String) session.getAttribute("host"));
+        pop3.setUserid((String) session.getAttribute("userid"));
+        pop3.setPassword((String) session.getAttribute("password"));
+        pop3.setRequest(request);
+        int semicolonIndex = msgid.indexOf(";");        
+        String result = msgid.substring(semicolonIndex + 1);                           
+        pop3.deleteFavorite(result,inboxService,sender);
+        
+        return "redirect:/favorite";  
     }
 }

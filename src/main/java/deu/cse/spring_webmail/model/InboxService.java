@@ -30,14 +30,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class InboxService {
     private final InboxRepository inboxRepository;
-    
-    public Inbox findById(){
-        return null;
-    }
-    
-    public String search(String username,String type,String keyword) throws MessagingException{
         
-        List<Inbox> inboxs = checkSearchType(username, type, keyword);
+    
+    public String search(String userName,String type,String keyword) throws MessagingException{
+        
+        List<Inbox> inboxs = checkSearchType(userName, type, keyword);
         List<Message> messageList = new ArrayList<>();
         for(Inbox inbox : inboxs){
             log.info("inbox sender = {}",inbox.getSender());
@@ -50,21 +47,21 @@ public class InboxService {
         for(Message temp : messageList){
             messages[size++] = temp;
         }
-         MessageFormatter formatter = new MessageFormatter(username);  //3.5
+         MessageFormatter formatter = new MessageFormatter(userName);  //3.5
          return formatter.getMessageTable(messages);                
     }
-    private List<Inbox> checkSearchType(String username,String type,String keyword){
+    private List<Inbox> checkSearchType(String userName,String type,String keyword){
         if(type.equals("sender")){
-            return inboxRepository.findByIdRepositoryNameAndSenderContains(username,keyword);
+            return inboxRepository.findByIdRepositoryNameAndSenderContains(userName,keyword);
         }else if(type.equals("contents")){
-            return inboxRepository.findInboxByRepositoryNameAndMessageBodyContaining(username,keyword);
+            return inboxRepository.findInboxByRepositoryNameAndMessageBodyContaining(userName,keyword);
         }else{
-            return inboxRepository.findByRepositoryNameAndSenderContainsOrMessageBodyContaining(username, keyword);
+            return inboxRepository.findByRepositoryNameAndSenderContainsOrMessageBodyContaining(userName, keyword);
         }
     }
     
-    public String favorites(String username) throws MessagingException{
-        var inboxs = inboxRepository.findByIdRepositoryNameAndFavorite(username, true);
+    public String favorites(String userName) throws MessagingException{
+        var inboxs = inboxRepository.findByIdRepositoryNameAndFavorite(userName, true);
         List<Message> messageList = new ArrayList<>();
           for(Inbox inbox : inboxs){
             log.info("inbox sender = {}",inbox.getSender());
@@ -77,19 +74,32 @@ public class InboxService {
         for(Message temp : messageList){
             messages[size++] = temp;
         }
-         MessageFormatter formatter = new MessageFormatter(username);  //3.5
+         MessageFormatter formatter = new MessageFormatter(userName);  //3.5
          return formatter.getFavoriteMessageTable(messages);                        
     }
     @Transactional
-    public void addFavorite(String repositoryName, String sender, String subject,String[] messagdId){
-       String id = messagdId[0];
-       Inbox inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, id);
+    public void addFavorite(String repositoryName, String sender, String[] messagdId){       
+       var inbox = findInbox(repositoryName, sender,messagdId);        
+       log.info("변경 전 inbox = {}",inbox.isFavorite());
        inbox.addFavorite();
+       log.info("변경 후 inbox = {}",inbox.isFavorite());
     }
     @Transactional
-    public void deleteFavorite(String repositoryName, String sender, String subject,String[] messagdId){
-       String id = messagdId[0];
-       Inbox inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, id);
+    public void deleteFavorite(String repositoryName, String sender,String messageId){
+        log.info("messageId = {}",messageId);
+       var inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, messageId);
+       log.info("변경 전 inbox = {}",inbox.isFavorite());
        inbox.deleteFavorite();
+       log.info("변경 후 inbox = {}",inbox.isFavorite());
+    }
+    private Inbox findInbox(String repositoryName, String sender, String[] messageId){
+       String id = messageId[0];
+       log.info("@@id = {}",id);
+       return inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, id);
+    }
+    public Message getMessage(String repositoryName,String messageId,String sender) throws MessagingException{
+        var inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, messageId);
+          InputStream inputStream = new ByteArrayInputStream(inbox.getMessageBody());
+          return new MimeMessage(Session.getDefaultInstance(new Properties()), inputStream);                
     }
 }

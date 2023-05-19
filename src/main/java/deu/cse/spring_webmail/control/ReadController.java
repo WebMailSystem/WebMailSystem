@@ -4,6 +4,7 @@
  */
 package deu.cse.spring_webmail.control;
 
+import deu.cse.spring_webmail.model.InboxService;
 import deu.cse.spring_webmail.model.Pop3Agent;
 import deu.cse.spring_webmail.model.RecyclebinService;
 import jakarta.mail.internet.MimeUtility;
@@ -31,6 +32,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -45,6 +47,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class ReadController {
 
     @Autowired
+    private InboxService inboxService;
+    @Autowired
     private RecyclebinService recyclebinService;
     @Autowired
     private ServletContext ctx;
@@ -56,16 +60,29 @@ public class ReadController {
     private String DOWNLOAD_FOLDER;
 
     @GetMapping("/show_message")
-    public String showMessage(@RequestParam Integer msgid, Model model) {
+    public String showMessage(@RequestParam Integer msgid, Model model,
+            @RequestParam("messageId") String messageId, @RequestParam("sender") String sender,
+            RedirectAttributes addr
+            ) {        
         log.debug("download_folder = {}", DOWNLOAD_FOLDER);
+        log.info("messageId = {}",messageId);    
+        addr.addFlashAttribute("msgid", msgid);
+        addr.addFlashAttribute("messageId", messageId);
+        addr.addFlashAttribute("sender", sender); 
         
+        return "redirect:/show_message.do";
+    }
+    @GetMapping("/show_message.do")
+    public String showMessageDo(@ModelAttribute("msgid") Integer msgid, Model model,
+        @ModelAttribute("messageId") String messageId, @ModelAttribute("sender") String sender){
         Pop3Agent pop3 = new Pop3Agent();
         pop3.setHost((String) session.getAttribute("host"));
         pop3.setUserid((String) session.getAttribute("userid"));
-        pop3.setPassword((String) session.getAttribute("password"));
+        pop3.setPassword((String) session.getAttribute("password"));       
         pop3.setRequest(request);
-        
-        String msg = pop3.getMessage(msgid);
+        int semicolonIndex = messageId.indexOf(";");        
+        String result = messageId.substring(semicolonIndex + 1);    
+        String msg = pop3.getMessage(result,inboxService,sender);        
         session.setAttribute("sender", pop3.getSender());  // 220612 LJM - added
         session.setAttribute("subject", pop3.getSubject());
         session.setAttribute("body", pop3.getBody());

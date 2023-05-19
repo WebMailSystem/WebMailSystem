@@ -57,8 +57,8 @@ public class MessageFormatter {
                     + " <td id=no>" + (i + 1) + " </td> "
                     + " <td id=sender>" + parser.getFromAddress() + "</td>"
                     + " <td id=subject> "
-                    + " <a href=show_message?msgid=" + (i + 1) + " title=\"메일 보기\"> "
-                    + parser.getSubject() + "</a> </td>"
+                    + " <a href=show_message?msgid=" + (i + 1) + "&sender="+ parser.getFromAddress() + "&messageId=" + parser.getMessageId()[0] +
+                     parser.getSubject() + "</a> </td>"
                     + " <td id=date>" + parser.getSentDate() + "</td>"
                     + " <td>"
                     + "<input type=\"checkbox\" name=\"deleteMultiple\" value=\"" + (i + 1) + "\" "
@@ -124,6 +124,7 @@ public class MessageFormatter {
         StringBuilder buffer = new StringBuilder();
 
         // 메시지 제목 보여주기
+        buffer.append("<h2> -----즐겨찾기-----</h2>");
         buffer.append("<table>");  // table start
         buffer.append("<tr> "
                 + " <th> No. </td> "
@@ -135,19 +136,19 @@ public class MessageFormatter {
 
         for (int i = messages.length - 1; i >= 0; i--) {
             MessageParser parser = new MessageParser(messages[i], userid);
-            parser.parse(false);  // envelope 정보만 필요
+            parser.parse(false);  // envelope 정보만 필요            
             // 메시지 헤더 포맷
             // 추출한 정보를 출력 포맷 사용하여 스트링으로 만들기
             buffer.append("<tr> "
                     + " <td id=no>" + (i + 1) + " </td> "
                     + " <td id=sender>" + parser.getFromAddress() + "</td>"
                     + " <td id=subject> "
-                    + " <a href=show_message?msgid=" + (i + 1) + " title=\"메일 보기\"> "
-                    + parser.getSubject() + "</a> </td>"
+                    + " <a href=show_message?msgid=" + (i + 1) + "&sender="+ parser.getFromAddress() + "&messageId=" + parser.getMessageId()[0] +
+                     parser.getSubject() + "</a> </td>"                    
                     + " <td id=date>" + parser.getSentDate() + "</td>"
                     + " <td id=delete>"
-                    + "<a href=delete_favorite.do"
-                    + "?msgid=" + (i + 1) + "> 삭제 </a>" + "</td>"
+                    + "<a href=delete-favorite.do"
+                    + "?sender=" + parser.getFromAddress() + "&messageId=" + parser.getMessageId()[0] + "삭제 </a>" + "</td>"
                     + " </tr>");
         }
         buffer.append("</table>");
