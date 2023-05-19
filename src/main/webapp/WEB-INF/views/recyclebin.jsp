@@ -11,7 +11,7 @@
 
 <!DOCTYPE html>
 
-<!-- 제어기에서 처리하면 로직 관련 소스 코드 제거 가능!
+
 <jsp:useBean id="pop3" scope="page" class="deu.cse.spring_webmail.model.Pop3Agent" />
 <%
             response.setHeader("Cache-Control","no-cache");
@@ -22,10 +22,10 @@
 %>
 -->
 
-<html>
+<html lang="ko">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>주메뉴 화면</title>
+        <title>휴지통 화면</title>
         <link type="text/css" rel="stylesheet" href="css/main_style.css" />
         <script>
             <c:if test="${!empty msg}">
@@ -43,20 +43,31 @@
 
         <!-- 메시지 삭제 링크를 누르면 바로 삭제되어 실수할 수 있음. 해결 방법은? -->
         <div id="main">
-            <div>
-              <form action="" method="POST">
-                <select name ="searchType">
-                    <option value="none" selected>=== 선택 ===</option>
-                    <option value="sender">송신자</option>
-                    <option value="contents">내용</option>
-                    <option value="all">내용 + 송신자</option>                    
-                </select>
-                <input type="text" name = "keyword"/>
-                <input type ="submit" value="검색"/>
-                </form>
-                <br>
-            </div>
-            ${messageList}
+            <h2> -----휴지통-----</h2>
+            <table>
+                <caption>휴지통 메일 리스트</caption>
+                <tr>
+                    <th> No.</th>
+                    <th> 보낸사람</th>
+                    <th> 제목</th>
+                    <th> 보낸날짜</th>
+                    <th> 복구</th>
+                    <th> 삭제</th>
+                </tr>
+                <% int i =  (Integer) request.getAttribute("count");%>
+            <c:forEach var = "recyclebinDTO" items = "${lists}">            
+                <tr>
+                    <td id ="no"><%= i%></td>
+                    <c:set var="sender" value="${fn:substringBefore(recyclebinDTO.sender, '@')}" />
+                    <td id="sender">${sender}</td>
+                    <td id ="subject"><a href="recyclebin/${recyclebinDTO.id}">${recyclebinDTO.title}</a></td>
+                    <td id ="date">${recyclebinDTO.date}</td>
+                    <td id ="restore"><a href="recyclebin/restore/${recyclebinDTO.id}">복구</a> </td>
+                    <td id ="delete"><a href="recyclebin/delete/${recyclebinDTO.id}">삭제</a> </td>
+                </tr>
+                <% i--; %>
+            </c:forEach>
+            </table>
         </div>
 
         <%@include file="footer.jspf"%>

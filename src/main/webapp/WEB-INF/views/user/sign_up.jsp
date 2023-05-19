@@ -10,14 +10,14 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="spring" %>
 <!DOCTYPE html>
 
-<html>
+<html lang="ko">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>회원가입 화면</title>
         <link type="text/css" rel="stylesheet" href="css/main_style.css" />
     </head>
     <body>
-        <%@include file="header.jspf"%>
+        <%@include file="../header.jspf"%>
 
         <div id="login_form">
             <form method="POST" action="/webmail/signup.do">
@@ -35,6 +35,6 @@
         </div>
 
 
-        <%@include file="footer.jspf"%>
+        <%@include file="../footer.jspf"%>
     </body>
 </html>

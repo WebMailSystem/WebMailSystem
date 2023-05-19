@@ -4,8 +4,10 @@
  */
 package deu.cse.spring_webmail.config;
 
+import com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilter;
 import deu.cse.spring_webmail.model.CustomOAuth2UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,7 +36,7 @@ public class WebSecurityConfig {
     
      @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.csrf().disable();
+        http.csrf().disable();        
         http.authorizeRequests().antMatchers("/","/css/**","/signup","/signup.do","/error").permitAll()
                 .antMatchers("/admin_menu").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()                              
@@ -49,16 +51,24 @@ public class WebSecurityConfig {
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")
+                .deleteCookies("JSESSIONID")
                 .invalidateHttpSession(true)
                 .and()
                 .exceptionHandling().accessDeniedPage("/")
                 .and()
                 .oauth2Login()
                 .userInfoEndpoint()                
-                .userService(customUserService);
-                
+                .userService(customUserService);                        
                 return http.build();
                 
     }
 
+    @Bean
+    public FilterRegistrationBean<XssEscapeServletFilter> filterRegistrationBean() {
+        FilterRegistrationBean<XssEscapeServletFilter> filterRegistration = new FilterRegistrationBean<>();
+        filterRegistration.setFilter(new XssEscapeServletFilter());
+        filterRegistration.setOrder(1);
+        filterRegistration.addUrlPatterns("/*");
+        return filterRegistration;
+    }
 }

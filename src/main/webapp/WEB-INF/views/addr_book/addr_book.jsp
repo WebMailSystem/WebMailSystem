@@ -30,7 +30,7 @@
         <br> <br>
         <p> <a href="insert_addr"> 주소록 추가 </a> </p>
 
-        <form  method="POST" onsubmit="return checkButton()">
+        <form  method="POST" >
             <table border="1">
                 <thead>
                     <tr>
@@ -52,7 +52,7 @@
                 </tbody>
             </table>
             <input type="submit" value="주소록 삭제" onclick="javascript: form.action='deleteAddr.do';" >
-            <input type="submit" value="메일 쓰기" onclick="javascript: form.action='write_mail2'; form.method='GET';" >
+            <input type="submit" value="메일 쓰기" onclick="javascript: form.action='write_mail2'; form.method='GET'; form.onsubmit='return checkButton()';" >
         </form>
 
 

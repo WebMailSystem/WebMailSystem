@@ -7,21 +7,18 @@ package deu.cse.spring_webmail.model;
 import deu.cse.spring_webmail.dto.SignupForm;
 import deu.cse.spring_webmail.entity.Role;
 import deu.cse.spring_webmail.entity.Users;
+import deu.cse.spring_webmail.repository.InboxRepository;
+import deu.cse.spring_webmail.repository.RecyclebinRepository;
 import deu.cse.spring_webmail.repository.UsersRepository;
-import jakarta.mail.MessagingException;
-import jakarta.mail.internet.MimeUtility;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 
@@ -30,12 +27,17 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
     
     private final UsersRepository usersRepository;
+    private final InboxRepository inboxRepository;
+    private final RecyclebinRepository recyclebinRepository;
     private final BCryptPasswordEncoder passwordEncoder;
-    private final SHAPasswordAlgorithm passwordAlgorithm;           
+    private final SHAPasswordAlgorithm passwordAlgorithm;
+    private final HttpSession session;
     
+    @Transactional
     public void signUp(SignupForm userDTO){
         String password = passwordEncoder.encode(userDTO.getPassword());
         String pwdHash = passwordAlgorithm.createPwdHash();
@@ -53,5 +55,45 @@ public class UserService {
     public boolean check(String username){
         return usersRepository.existsByUsername(username);
     }
-     
+    @Transactional
+    public void deleteUser(Long userId,String username){
+        if(oauth2Check(username)){
+            log.info("access_token = {}",(String)session.getAttribute("access_token"));
+            unlinkKakao((String)session.getAttribute("access_token"));
+        }
+        usersRepository.deleteById(userId);
+        inboxRepository.deleteByIdRepositoryName(username);
+        recyclebinRepository.deleteByinboxIdRepositoryName(username);                
+    }
+    @Transactional
+    public void changePassword(Long userId,String password){
+       Users user = usersRepository.findById(userId).get();
+       String changePassword = passwordEncoder.encode(password);
+       log.info("changePassword = {}",changePassword);
+       user.changePassword(changePassword);
+       
+    }   
+    public boolean passwordCheck(String username,String password){
+        Users user = usersRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사용자 정보 없음"));             
+        return passwordEncoder.matches(password,user.getPassword());
+    }
+    public boolean oauth2Check(String username){
+        Users user = usersRepository.findByUsername(username).orElseThrow(() -> new RuntimeException("사용자 정보 없음"));               
+        return user.getPassword().equals("1234");
+    }
+    
+    private void unlinkKakao(String access_Token){
+        log.info("실행되는지 확인 token = {}",access_Token);
+        String uri = "https://kapi.kakao.com/v1/user/unlink";
+        try{
+            URL url = new URL(uri);
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Authorization", "Bearer " + access_Token);            
+            log.info("responseCode = {}",conn.getResponseCode());
+        }catch(Exception e){
+            log.error("error :",e);
+        }
+        
+    }    
 }

@@ -59,7 +59,10 @@ td#subject {
     text-align: center;
     margin: 100px 10px 100px 10px;
 }
-
+#passwordcheck_form{
+    text-align: center;
+    margin: 100px 10px 100px 10px;
+}
 #login_fail {
     color: fuchsia;
     margin: 100px 200px 100px 200px;
@@ -80,7 +83,11 @@ td#subject {
     margin-left: 190px;
     text-align: left;
 }
-
+.main {
+    margin-top: 50px;
+    margin-left: 190px;
+    text-align: left;
+}
 #addrbook, #msgBody {
     margin-top: 50px;
     margin-left: 240px;
