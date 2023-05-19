@@ -3,7 +3,8 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package deu.cse.spring_webmail.unittest;
-import deu.cse.spring_webmail.model.UserService;
+import deu.cse.spring_webmail.model.SHAPasswordAlgorithm;
+import deu.cse.spring_webmail.repository.AddrsRepository;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeUtility;
 import java.io.ByteArrayOutputStream;
@@ -27,8 +28,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class SHAAlgorithmTest {
        
-
+    @Autowired SHAPasswordAlgorithm SHAPasswordAlgorithm;
+    @Autowired AddrsRepository AddrsRepository;
     
+    @Test
+    void sha(){
+        String a = SHAPasswordAlgorithm.createPwdHash();
+        log.info("a = {}",a);
+    }
     
     @Test
     void 이메일자르기테스트(){

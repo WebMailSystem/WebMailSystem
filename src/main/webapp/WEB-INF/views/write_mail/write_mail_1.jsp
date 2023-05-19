@@ -10,13 +10,15 @@
 <%-- @taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" --%>
 
 
-<html>
+<html lang="ko">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>메일 쓰기 화면</title>
         <link type="text/css" rel="stylesheet" href="css/main_style.css" />
         <style>
-            .ck-editor__editable { height: 400px; }
+            .ck-editor__editable {
+                height: 400px;
+            }
         </style>
     </head>
     <body>
@@ -29,11 +31,13 @@
         <div id="main">
             <%-- <jsp:include page="mail_send_form.jsp" /> --%>
             <form enctype="multipart/form-data" method="POST" action="write_mail.do" >
-                <table summary="메일쓰기">
+                <table summary="주소록 기능에서 바로 메일쓰기">
                     <tr><th scope="col" colspan="2">메일 쓰기</th></tr>
                     <tr>
                         <td> 수신 </td>
-                        <td> <input type="text" name="to" size="80" value="${!empty param['sender'] ? param['sender'] : ''}">            
+                        <td> <input type="text" name="to" size="80" value="${sender}"  
+                                    <!--    value=<%=request.getParameter("recv") == null ? "" : request.getParameter("recv")%>  -->
+                        </td>            
                         </td>
                     </tr>
                     <tr>
@@ -51,12 +55,12 @@
                     <tr>  <%-- TextArea    --%>
                         <td colspan="2">
                             <textarea rows="15" name="body" cols="80" id="editor">${!empty param['sender'] ?
-"
+                                                                                    "
 
 
 
-----
-" += sessionScope['body'] : ''}</textarea> 
+                                                                                    ----
+                                                                                    " += sessionScope['body'] : ''}</textarea> 
                         </td>
                     </tr>
                     <tr>
@@ -77,18 +81,18 @@
         <script src="https://cdn.ckeditor.com/ckeditor5/37.0.1/classic/ckeditor.js" integrity="sha512-ICu1H+8v4PhUt4ABYxy3cQA+uLij3HExUA7c4KZLgG2BTK1OzwWdbK5d1nqlEp4kBbVBszJcug+zCTV77mCWNg==" crossorigin="anonymous"></script>
         <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/translations/ko.js" integrity="sha512-b8e0sUAMKXH7dVSSfQkBufDFGjaUcY/lpxMZijaW8nX5CeFmfvU9XroLnXt/pfRjWwKrDWt0pqEobetBpvqohQ==" crossorigin="anonymous"></script>
         <script>
-                ClassicEditor.create( document.querySelector( '#editor' ), {
-                    toolbar: {
-                            items: [                                
-                                'heading',
-                                '|', 'bold', 'italic',
-                                '|', 'insertTable', 'bulletedList', 'numberedList',
-                                '|', ,'undo', 'redo',
-                                ]
-                        },
-                        language: "ko"
-                    
-                } );
+            ClassicEditor.create(document.querySelector('#editor'), {
+                toolbar: {
+                    items: [
+                        'heading',
+                        '|', 'bold', 'italic',
+                        '|', 'insertTable', 'bulletedList', 'numberedList',
+                        '|', , 'undo', 'redo',
+                    ]
+                },
+                language: "ko"
+
+            });
         </script>
     </body>
 </html>
