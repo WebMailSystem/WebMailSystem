@@ -20,6 +20,7 @@
 
         <p> <a href="main_menu"> 메일 읽기 </a> </p>
         <p> <a href="write_mail"> 메일 쓰기 </a> </p>
+        <p> <a href="addr_book"> 주소록 </a> </p>
         <!--<p><a href="login.do?menu=<%= CommandType.LOGOUT %> // //">로그아웃</a></p>-->
         <p><a href="/webmail/logout">로그아웃</a></p>
     </body>

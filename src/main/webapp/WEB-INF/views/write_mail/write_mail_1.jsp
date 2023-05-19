@@ -30,7 +30,7 @@
                     <tr>
                         <td> 수신 </td>
                         <td> <input type="text" name="to" size="80"
-                                    value="${!empty param['sender'] ? param['sender'] : ''}"  
+                                    value="${sender}"  
             <!--    value=<%=request.getParameter("recv") == null ? "" : request.getParameter("recv")%>  -->
                         </td>
                     </tr>

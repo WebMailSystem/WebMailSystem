@@ -4,18 +4,23 @@
  */
 package deu.cse.spring_webmail.control;
 
+import deu.cse.spring_webmail.entity.Addrs;
 import deu.cse.spring_webmail.model.SmtpAgent;
+import deu.cse.spring_webmail.repository.AddrsRepository;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.stream.Stream;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -41,11 +46,35 @@ public class WriteController {
     @Autowired
     private HttpSession session;
     
+    @Autowired
+    AddrsRepository repository;
+    
     @GetMapping("/write_mail")
     public String writeMail() {
         log.debug("write_mail called...");
         session.removeAttribute("sender");  // 220612 LJM - 메일 쓰기 시는 
         return "write_mail/write_mail";
+    }
+    
+    @GetMapping("/write_mail2")
+    public String writeMail2(Model model, HttpServletRequest request,@RequestParam("delete_addr")String id ) {
+        log.debug("write_mail called...");
+        session.removeAttribute("sender");  // 220612 LJM - 메일 쓰기 시는 
+        
+                // 널체크
+        StringBuffer buffer = new StringBuffer();
+       long[] indexes = Stream.of(id.split(",")).mapToLong(Long::parseLong).toArray();
+        
+        for (long index : indexes) {
+            Addrs addr = repository.findById(index).orElseThrow(() -> new IllegalArgumentException("체크 안 되어있음"));
+            
+           buffer.append(addr.getAddremail());
+           buffer.append(",");
+        }
+       
+        request.setAttribute("sender", buffer );
+        
+        return "write_mail/write_mail_1";
     }
     
     @PostMapping("/write_mail.do")
