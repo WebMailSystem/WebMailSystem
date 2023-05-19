@@ -79,24 +79,15 @@ public class InboxService {
     }
     @Transactional
     public void addFavorite(String repositoryName, String sender, String[] messagdId){       
-       var inbox = findInbox(repositoryName, sender,messagdId);        
-       log.info("변경 전 inbox = {}",inbox.isFavorite());
-       inbox.addFavorite();
-       log.info("변경 후 inbox = {}",inbox.isFavorite());
+       String id = messagdId[0];       
+       var inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, id);
+       inbox.addFavorite();      
     }
     @Transactional
-    public void deleteFavorite(String repositoryName, String sender,String messageId){
-        log.info("messageId = {}",messageId);
-       var inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, messageId);
-       log.info("변경 전 inbox = {}",inbox.isFavorite());
-       inbox.deleteFavorite();
-       log.info("변경 후 inbox = {}",inbox.isFavorite());
-    }
-    private Inbox findInbox(String repositoryName, String sender, String[] messageId){
-       String id = messageId[0];
-       log.info("@@id = {}",id);
-       return inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, id);
-    }
+    public void deleteFavorite(String repositoryName, String sender,String messageId){       
+       var inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, messageId);      
+       inbox.deleteFavorite();      
+    }    
     public Message getMessage(String repositoryName,String messageId,String sender) throws MessagingException{
         var inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, messageId);
           InputStream inputStream = new ByteArrayInputStream(inbox.getMessageBody());
