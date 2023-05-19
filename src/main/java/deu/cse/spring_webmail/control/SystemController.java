@@ -270,8 +270,7 @@ public class SystemController {
         return "redirect:/favorite";
     }
     @GetMapping("delete-favorite.do")
-    public String deleteFavorite(@RequestParam("messageId") String msgid,@RequestParam("sender") String sender){
-        log.info("delete-favorite.do");
+    public String deleteFavorite(@RequestParam("messageId") String msgid,@RequestParam("sender") String sender){        
         Pop3Agent pop3 = new Pop3Agent();       
         pop3.setHost((String) session.getAttribute("host"));
         pop3.setUserid((String) session.getAttribute("userid"));

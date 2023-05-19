@@ -82,8 +82,7 @@ public class MessageParser {
         subject = message.getSubject();
         sentDate = message.getSentDate().toString();
         sentDate = sentDate.substring(0, sentDate.length() - 8);  // 8 for "KST 20XX"
-        messageId = message.getHeader("Message-ID");
-        log.info("messagdId = {}",messageId[0]);
+        messageId = message.getHeader("Message-ID");        
 
     }
 
