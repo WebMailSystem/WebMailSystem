@@ -31,7 +31,7 @@
 
     <br> <br>
     <form action="insertAddr.do" method="POST" name="insert" onsubmit="return validateForm()" required>
-        <table border="0">
+        <table border="0" summary="주소록 추가">
             <th colspan="2">주소록 추가</th>
             <tbody>
                 <tr>

@@ -32,8 +32,7 @@
         <p> <a href="insert_addr"> 주소록 추가 </a> </p>
 
         <form  method="POST" >
-            <table border="1">
-                <caption>주소록 조회 테이블</caption>
+            <table border="1" summary="주소록 조회">
                 <thead>
                     <tr>
                         <th>선택</th>

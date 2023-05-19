@@ -15,6 +15,11 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>메일 쓰기 화면</title>
         <link type="text/css" rel="stylesheet" href="css/main_style.css" />
+        <style>
+            .ck-editor__editable {
+                height: 400px;
+            }
+        </style>
     </head>
     <body>
         <%@include file="../header.jspf"%>
@@ -29,9 +34,9 @@
                 <table>
                     <tr>
                         <td> 수신 </td>
-                        <td> <input type="text" name="to" size="80"
-                                    value="${sender}"  
-            <!--    value=<%=request.getParameter("recv") == null ? "" : request.getParameter("recv")%>  -->
+                        <td> <input type="text" name="to" size="80" value="${sender}"  
+                                    <!--    value=<%=request.getParameter("recv") == null ? "" : request.getParameter("recv")%>  -->
+                        </td>            
                         </td>
                     </tr>
                     <tr>
@@ -48,13 +53,13 @@
                     </tr>
                     <tr>  <%-- TextArea    --%>
                         <td colspan="2">
-                            <textarea rows="15" name="body" cols="80">${!empty param['sender'] ?
-"
+                            <textarea rows="15" name="body" cols="80" id="editor">${!empty param['sender'] ?
+                                                                                    "
 
 
 
-----
-" += sessionScope['body'] : ''}</textarea> 
+                                                                                    ----
+                                                                                    " += sessionScope['body'] : ''}</textarea> 
                         </td>
                     </tr>
                     <tr>
@@ -71,6 +76,22 @@
             </form>
         </div>
 
-        <%@include file="../footer.jspf"%>
+        <%@include file="../footer.jspf"%>        
+        <script src="https://cdn.ckeditor.com/ckeditor5/37.0.1/classic/ckeditor.js" integrity="sha512-ICu1H+8v4PhUt4ABYxy3cQA+uLij3HExUA7c4KZLgG2BTK1OzwWdbK5d1nqlEp4kBbVBszJcug+zCTV77mCWNg==" crossorigin="anonymous"></script>
+        <script src="https://cdn.ckeditor.com/ckeditor5/34.0.0/classic/translations/ko.js" integrity="sha512-b8e0sUAMKXH7dVSSfQkBufDFGjaUcY/lpxMZijaW8nX5CeFmfvU9XroLnXt/pfRjWwKrDWt0pqEobetBpvqohQ==" crossorigin="anonymous"></script>
+        <script>
+            ClassicEditor.create(document.querySelector('#editor'), {
+                toolbar: {
+                    items: [
+                        'heading',
+                        '|', 'bold', 'italic',
+                        '|', 'insertTable', 'bulletedList', 'numberedList',
+                        '|', , 'undo', 'redo',
+                    ]
+                },
+                language: "ko"
+
+            });
+        </script>
     </body>
 </html>
