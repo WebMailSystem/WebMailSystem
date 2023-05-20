@@ -18,6 +18,7 @@ import java.util.Properties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -26,16 +27,14 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class InboxService {
     private final InboxRepository inboxRepository;
-    
-    public Inbox findById(){
-        return null;
-    }
-    
-    public String search(String username,String type,String keyword) throws MessagingException{
         
-        List<Inbox> inboxs = checkSearchType(username, type, keyword);
+    
+    public String search(String userName,String type,String keyword) throws MessagingException{
+        
+        List<Inbox> inboxs = checkSearchType(userName, type, keyword);
         List<Message> messageList = new ArrayList<>();
         for(Inbox inbox : inboxs){
             log.info("inbox sender = {}",inbox.getSender());
@@ -48,16 +47,50 @@ public class InboxService {
         for(Message temp : messageList){
             messages[size++] = temp;
         }
-         MessageFormatter formatter = new MessageFormatter(username);  //3.5
+         MessageFormatter formatter = new MessageFormatter(userName);  //3.5
          return formatter.getMessageTable(messages);                
     }
-    private List<Inbox> checkSearchType(String username,String type,String keyword){
+    private List<Inbox> checkSearchType(String userName,String type,String keyword){
         if(type.equals("sender")){
-            return inboxRepository.findByIdRepositoryNameAndSenderContains(username,keyword);
+            return inboxRepository.findByIdRepositoryNameAndSenderContains(userName,keyword);
         }else if(type.equals("contents")){
-            return inboxRepository.findInboxByRepositoryNameAndMessageBodyContaining(username,keyword);
+            return inboxRepository.findInboxByRepositoryNameAndMessageBodyContaining(userName,keyword);
         }else{
-            return inboxRepository.findByRepositoryNameAndSenderContainsOrMessageBodyContaining(username, keyword);
+            return inboxRepository.findByRepositoryNameAndSenderContainsOrMessageBodyContaining(userName, keyword);
         }
+    }
+    
+    public String favorites(String userName) throws MessagingException{
+        var inboxs = inboxRepository.findByIdRepositoryNameAndFavorite(userName, true);
+        List<Message> messageList = new ArrayList<>();
+          for(Inbox inbox : inboxs){
+            log.info("inbox sender = {}",inbox.getSender());
+            InputStream inputStream = new ByteArrayInputStream(inbox.getMessageBody());
+            MimeMessage mimeMessage = new MimeMessage(Session.getDefaultInstance(new Properties()), inputStream);
+            messageList.add(mimeMessage);
+        }
+        Message[] messages = new Message[messageList.size()];
+        int size = 0;
+        for(Message temp : messageList){
+            messages[size++] = temp;
+        }
+         MessageFormatter formatter = new MessageFormatter(userName);  //3.5
+         return formatter.getFavoriteMessageTable(messages);                        
+    }
+    @Transactional
+    public void addFavorite(String repositoryName, String sender, String[] messagdId){       
+       String id = messagdId[0];       
+       var inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, id);
+       inbox.addFavorite();      
+    }
+    @Transactional
+    public void deleteFavorite(String repositoryName, String sender,String messageId){       
+       var inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, messageId);      
+       inbox.deleteFavorite();      
+    }    
+    public Message getMessage(String repositoryName,String messageId,String sender) throws MessagingException{
+        var inbox = inboxRepository.findByRepositoryNameAndSenderAndMessageBody(repositoryName, sender, messageId);
+          InputStream inputStream = new ByteArrayInputStream(inbox.getMessageBody());
+          return new MimeMessage(Session.getDefaultInstance(new Properties()), inputStream);                
     }
 }

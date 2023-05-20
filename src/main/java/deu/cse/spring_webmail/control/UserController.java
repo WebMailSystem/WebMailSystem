@@ -6,7 +6,6 @@ package deu.cse.spring_webmail.control;
 
 import deu.cse.spring_webmail.dto.SessionDTO;
 import deu.cse.spring_webmail.dto.SignupForm;
-import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.model.UserService;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -14,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;

@@ -11,7 +11,7 @@
 
 <!DOCTYPE html>
 
-<!-- 제어기에서 처리하면 로직 관련 소스 코드 제거 가능!
+
 <jsp:useBean id="pop3" scope="page" class="deu.cse.spring_webmail.model.Pop3Agent" />
 <%
             response.setHeader("Cache-Control","no-cache");
@@ -20,12 +20,12 @@
             pop3.setUserid((String) session.getAttribute("userid"));
             pop3.setPassword((String) session.getAttribute("password"));
 %>
--->
 
-<html>
+
+<html lang="ko">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <title>주메뉴 화면</title>
+        <title>즐겨찾기 화면</title>
         <link type="text/css" rel="stylesheet" href="css/main_style.css" />
         <script>
             <c:if test="${!empty msg}">
@@ -38,27 +38,10 @@
 
         <div id="sidebar">
             <jsp:include page="sidebar_menu.jsp" />
-        </div>
-
-
-
+        </div>        
         <div id="main">
-            <div>
-              <form action="" method="POST">
-                <select name ="searchType">
-                    <option value="none" selected>=== 선택 ===</option>
-                    <option value="sender">송신자</option>
-                    <option value="contents">내용</option>
-                    <option value="all">내용 + 송신자</option>                    
-                </select>
-                <input type="text" name = "keyword"/>
-                <input type ="submit" value="검색"/>
-                </form>
-                <br>
-            </div>
             ${messageList}
         </div>
-
         <%@include file="footer.jspf"%>
     </body>
 </html>
