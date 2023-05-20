@@ -1,43 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- version 20180725-1 -->
-<config xmlns="http://www.nhncorp.com/lucy-xss" extends="lucy-xss-default-sax.xml">
+
+<config xmlns="http://www.nhncorp.com/lucy-xss"
+	extends="lucy-xss-superset-sax.xml">
 	<elementRule>
-		<element name="body" disable="true" /> <!-- <BODY ONLOAD=alert("XSS")>, <BODY BACKGROUND="javascript:alert('XSS')"> -->
-		<element name="embed" disable="true" />
-		<element name="iframe" disable="true" /> <!-- <IFRAME SRC=”http://hacker-site.com/xss.html”> -->
-		<element name="meta" disable="true" />
-		<element name="object" disable="true" />
-		<element name="script" disable="true" /> <!-- <SCRIPT> alert(“XSS”); </SCRIPT> -->
-		<element name="style" disable="true" />
-		<element name="link" disable="true" />
+		<element name="applet" disable="true" />
 		<element name="base" disable="true" />
+		<element name="body" disable="true" />
+		<element name="form" disable="true" />
+		<element name="html" disable="true" />
+		<element name="iframe" disable="true" />
+		<element name="meta" disable="true" />
+		<element name="script" disable="true" />
+		<element name="style" disable="true" />
+		<element name="textarea" disable="false" />
                 <element name="p" disable="false" />
-                <element name="textarea" disable="false" />
-                <element name="strong" disable="false" />
                 <element name="i" disable="false" />
-                <element name="ul" disable="false" />
-                <element name="li" disable="false" />
+		<element name="xml" disable="true" />
+		<element name="xmp" disable="true" />
+		<element name="td" endTag="false" />
+		<element name="embed" disable="false" />
+		<element name="object" disable="true" />
 	</elementRule>
+
 	<attributeRule>
-		<attribute name="data" base64Decoding="true">
-			<notAllowedPattern><![CDATA[(?i:s\\*c\\*r\\*i\\*p\\*t\\*:)]]></notAllowedPattern>
-			<notAllowedPattern><![CDATA[(?i:d\\*a\\*t\\*a\\*:)]]></notAllowedPattern>
-			<notAllowedPattern><![CDATA[&[#\\%x]+[\da-fA-F][\da-fA-F]+]]></notAllowedPattern>
-		</attribute>
-		<attribute name="src" base64Decoding="true">
-			<notAllowedPattern><![CDATA[(?i:s\\*c\\*r\\*i\\*p\\*t\\*:)]]></notAllowedPattern>
-			<notAllowedPattern><![CDATA[(?i:d\\*a\\*t\\*a\\*:)]]></notAllowedPattern>
-			<notAllowedPattern><![CDATA[&[#\\%x]+[\da-fA-F][\da-fA-F]+]]></notAllowedPattern>
-		</attribute>
-		<attribute name="style">
-			<notAllowedPattern><![CDATA[(?i:j\\*a\\*v\\*a\\*s\\*c\\*r\\*i\\*p\\*t\\*:)]]></notAllowedPattern>
-			<notAllowedPattern><![CDATA[(?i:e\\*x\\*p\\*r\\*e\\*s\\*s\\*i\\*o\\*n)]]></notAllowedPattern>
-			<notAllowedPattern><![CDATA[&[#\\%x]+[\da-fA-F][\da-fA-F]+]]></notAllowedPattern>
+		<attribute name="src">
+			<allowedPattern><![CDATA[['"]?\s*http://.*]]></allowedPattern>
 		</attribute>
 		<attribute name="href">
-			<notAllowedPattern><![CDATA[(?i:j\\*a\\*v\\*a\\*s\\*c\\*r\\*i\\*p\\*t\\*:)]]></notAllowedPattern>
-			<notAllowedPattern><![CDATA[&[#\\%x]+[\da-fA-F][\da-fA-F]+]]></notAllowedPattern>
+			<notAllowedPattern><![CDATA[(?i:script)]]></notAllowedPattern>
+			<notAllowedPattern><![CDATA[(?i:\.css)]]></notAllowedPattern>
 		</attribute>
-		<attribute name="formaction" disable="true"/>
+		<attribute name="style">
+			<notAllowedPattern><![CDATA[(?i:expression)]]></notAllowedPattern>
+			<notAllowedPattern><![CDATA[(?i:alert)]]></notAllowedPattern>
+		</attribute>
 	</attributeRule>
 </config>
