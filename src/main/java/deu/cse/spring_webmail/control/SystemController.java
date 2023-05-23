@@ -170,7 +170,7 @@ public class SystemController {
             
             if (agent.addUser(id, password)) {
                 attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 성공하였습니다.", id));
-            } else {
+            } else {                
                 attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 실패하였습니다.", id));
             }
         } catch (Exception ex) {

@@ -13,6 +13,17 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>사용자 추가 화면</title>
         <link type="text/css" rel="stylesheet" href="css/main_style.css" />
+        
+        <script>
+            function checkButton(){
+                if(!confirm("사용자를 추가 하시겠습니까?")){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+        </script>
+        
     </head>
     <body>
         <jsp:include page="../header.jspf" />
@@ -24,7 +35,7 @@
         <div id="main">
             추가로 등록할 사용자 ID와 암호를 입력해 주시기 바랍니다. <br> <br>
 
-            <form name="AddUser" action="add_user.do" method="POST">
+            <form name="AddUser" action="add_user.do" method="POST" onsubmit="return checkButton()">
                 <table border="0" align="left">
                     <tr>
                         <td>사용자 ID</td>
