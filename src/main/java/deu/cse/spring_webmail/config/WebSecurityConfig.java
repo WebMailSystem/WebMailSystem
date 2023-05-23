@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,6 +40,10 @@ public class WebSecurityConfig {
         http.csrf().disable();        
         http.authorizeRequests().antMatchers("/","/css/**","/signup","/signup.do","/error").permitAll()
                 .antMatchers("/admin_menu").hasAnyRole("ADMIN")
+                .antMatchers("/add_user").hasAnyRole("ADMIN")
+                .antMatchers("/delete_user").hasAnyRole("ADMIN")
+                .antMatchers("/change_pw").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/add_user.do", "/delete_user.do", "adminPasswordChange.do").hasAnyRole("ADMIN")
                 .anyRequest().authenticated()                              
                 .and()
                 .formLogin()
@@ -46,8 +51,8 @@ public class WebSecurityConfig {
                 .passwordParameter("password")
                 .loginPage("/")
                 .loginProcessingUrl("/login.do")                        
-                .failureHandler(customFailureHandler)
-                .defaultSuccessUrl("/main_menu")
+                .failureHandler(customFailureHandler)                
+                .successHandler(new CustomSuccessHandler())                
                 .and()
                 .logout()
                 .logoutSuccessUrl("/")

@@ -5,11 +5,13 @@
 package deu.cse.spring_webmail.control;
 
 import deu.cse.spring_webmail.dto.SessionDTO;
+import deu.cse.spring_webmail.dto.SignupForm;
 import deu.cse.spring_webmail.entity.Role;
 import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.model.InboxService;
 import deu.cse.spring_webmail.model.Pop3Agent;
 import deu.cse.spring_webmail.model.UserAdminAgent;
+import deu.cse.spring_webmail.model.UserService;
 import jakarta.mail.MessagingException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -22,6 +24,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +59,8 @@ public class SystemController {
     @Autowired
     private HttpServletRequest request;
     @Autowired
-    private final InboxService inboxService;
+    private final InboxService inboxService;    
+    private final AdminService adminService;
 
     @Value("${root.id}")
     private String ROOT_ID;
@@ -120,10 +124,21 @@ public class SystemController {
     }
 
     @GetMapping("/admin_menu")
-    public String adminMenu(Model model) {
+    public String adminMenu(Model model, RedirectAttributes attrs) {
         log.debug("root.id = {}, root.password = {}, admin.id = {}",
                 ROOT_ID, ROOT_PASSWORD, ADMINISTRATOR);
-
+        
+        log.info("session = {}",session.getAttribute("userid"));
+        
+        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
+//        String nowUser = session.getAttribute("userid").toString();                
+        
+//        if(!isAdmin(nowUser)) {
+//            log.info("관리자 권한 없는데 유저 추가하려고 함");
+//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
+//            return "redirect:/main_menu";
+//        }
+        
         model.addAttribute("userList", getUserList());
         return "admin/admin_menu";
     }
@@ -134,26 +149,49 @@ public class SystemController {
     }
 
     @PostMapping("/add_user.do")
-    public String addUserDo(@RequestParam String id, @RequestParam String password,
+    public String addUserDo(@Valid SignupForm user, @RequestParam String username, @RequestParam String password,
             RedirectAttributes attrs) {
         log.debug("add_user.do: id = {}, password = {}, port = {}",
-                id, password, JAMES_CONTROL_PORT);
+                username, password, JAMES_CONTROL_PORT);
+        
+        log.info("session = {}",session.getAttribute("userid"));
+        
+        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
+//        String nowUser = session.getAttribute("userid").toString();                
+        
+//        if(!isAdmin(nowUser)) {
+//            log.info("관리자 권한 없는데 유저 추가하려고 함");
+//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
+//            return "redirect:/main_menu";
+//        }
+        
+        
+//        try {
+//            String cwd = ctx.getRealPath(".");
+//            UserAdminAgent agent = new UserAdminAgent(JAMES_HOST, JAMES_CONTROL_PORT, cwd,
+//                    ROOT_ID, ROOT_PASSWORD, ADMINISTRATOR);
+//            
+//            
+//            
+//            if (agent.addUser(username, password)) {
+//                attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 성공하였습니다.", username));
+//            } else {                
+//                attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 실패하였습니다.", username));
+//            }
+//        } catch (Exception ex) {
+//            log.error("add_user.do: 시스템 접속에 실패했습니다. 예외 = {}", ex.getMessage());
+//        }
 
-        try {
-            String cwd = ctx.getRealPath(".");
-            UserAdminAgent agent = new UserAdminAgent(JAMES_HOST, JAMES_CONTROL_PORT, cwd,
-                    ROOT_ID, ROOT_PASSWORD, ADMINISTRATOR);
-
-            // if (addUser successful)  사용자 등록 성공 팦업창
-            // else 사용자 등록 실패 팝업창
-            if (agent.addUser(id, password)) {
-                attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 성공하였습니다.", id));
-            } else {
-                attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 실패하였습니다.", id));
-            }
-        } catch (Exception ex) {
-            log.error("add_user.do: 시스템 접속에 실패했습니다. 예외 = {}", ex.getMessage());
+        boolean check = adminService.check(user.getUsername());
+        
+        if (check) {
+            // 팝업 안 뜨는 이유 : redirect때문임
+            attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 실패하였습니다.", username));
+            return "redirect:/add_user";
         }
+
+        adminService.signUp(user);
+        attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 성공하였습니다.", username));
 
         return "redirect:/admin_menu";
     }
@@ -161,6 +199,18 @@ public class SystemController {
     @GetMapping("/delete_user")
     public String deleteUser(Model model) {
         log.debug("delete_user called");
+        
+        log.info("session = {}",session.getAttribute("userid"));
+        
+        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
+//        String nowUser = session.getAttribute("userid").toString();                
+        
+//        if(!isAdmin(nowUser)) {
+//            log.info("관리자 권한 없는데 유저 추가하려고 함");
+//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
+//            return "redirect:/main_menu";
+//        }
+        
         model.addAttribute("userList", getUserList());
         return "admin/delete_user";
     }
@@ -174,6 +224,18 @@ public class SystemController {
     @PostMapping("delete_user.do")
     public String deleteUserDo(@RequestParam String[] selectedUsers, RedirectAttributes attrs) {
         log.debug("delete_user.do: selectedUser = {}", List.of(selectedUsers));
+
+        
+        log.info("session = {}",session.getAttribute("userid"));
+        
+        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
+//        String nowUser = session.getAttribute("userid").toString();                
+        
+//        if(!isAdmin(nowUser)) {
+//            log.info("관리자 권한 없는데 유저 추가하려고 함");
+//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
+//            return "redirect:/main_menu";
+//        }
 
         try {
             String cwd = ctx.getRealPath(".");
@@ -281,5 +343,42 @@ public class SystemController {
         pop3.deleteFavorite(result,inboxService,sender);
         
         return "redirect:/favorite";  
+    }
+    
+    @GetMapping("change_pw")
+    public String changeAdminPw(RedirectAttributes attrs) {       
+        
+        return "/admin/change_password";
+    }
+    
+    @PostMapping("adminPasswordChange.do")
+    public String changeAdminPwDo(RedirectAttributes attrs) {        
+        String old = request.getParameter("old_password");
+        String newPw = request.getParameter("new_password");
+        log.info("{}, {}", old, newPw);
+                
+        String userName = session.getAttribute("userid").toString();
+        
+        // 기존 비밀번호와 동일한지 체크하기
+        if (!adminService.passwordCheck(userName, old)) {
+            log.info("기존 비밀번호가 일치하지 않습니다.");
+            attrs.addFlashAttribute("msg", String.format("기존 비밀번호가 일치하지 않습니다."));
+            
+            return "redirect:/change_pw";
+        }   
+        
+        // 변경할 비밀번호가 기존 비밀번호와 동일할 경우
+        if (adminService.passwordCheck(userName, newPw)) {
+            log.info("기존 비밀번호와 변경할 비밀번호가 동일합니다.");
+            attrs.addFlashAttribute("msg", String.format("기존 비밀번호와 변경할 비밀번호가 동일합니다."));
+            
+            return "redirect:/change_pw";
+        }
+        
+        // 비밀번호 변경
+        SessionDTO user =(SessionDTO)session.getAttribute("user");
+        adminService.changePassword(user.getId(), old, newPw);
+        attrs.addFlashAttribute("msg", String.format("비밀번호 변경이 완료되었습니다."));
+        return "redirect:/admin_menu";
     }
 }
