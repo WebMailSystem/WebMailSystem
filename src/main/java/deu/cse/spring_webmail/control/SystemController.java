@@ -10,6 +10,7 @@ import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.model.InboxService;
 import deu.cse.spring_webmail.model.Pop3Agent;
 import deu.cse.spring_webmail.model.UserAdminAgent;
+import deu.cse.spring_webmail.model.UserService;
 import jakarta.mail.MessagingException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -56,7 +57,8 @@ public class SystemController {
     @Autowired
     private HttpServletRequest request;
     @Autowired
-    private final InboxService inboxService;
+    private final InboxService inboxService;    
+    private final AdminService adminService;
 
     @Value("${root.id}")
     private String ROOT_ID;
@@ -325,5 +327,42 @@ public class SystemController {
         pop3.deleteFavorite(result,inboxService,sender);
         
         return "redirect:/favorite";  
+    }
+    
+    @GetMapping("change_pw")
+    public String changeAdminPw(RedirectAttributes attrs) {       
+        
+        return "/admin/change_password";
+    }
+    
+    @PostMapping("adminPasswordChange.do")
+    public String changeAdminPwDo(RedirectAttributes attrs) {        
+        String old = request.getParameter("old_password");
+        String newPw = request.getParameter("new_password");
+        log.info("{}, {}", old, newPw);
+                
+        String userName = session.getAttribute("userid").toString();
+        
+        // 기존 비밀번호와 동일한지 체크하기
+        if (!adminService.passwordCheck(userName, old)) {
+            log.info("기존 비밀번호가 일치하지 않습니다.");
+            attrs.addFlashAttribute("msg", String.format("기존 비밀번호가 일치하지 않습니다."));
+            
+            return "redirect:/change_pw";
+        }   
+        
+        // 변경할 비밀번호가 기존 비밀번호와 동일할 경우
+        if (adminService.passwordCheck(userName, newPw)) {
+            log.info("기존 비밀번호와 변경할 비밀번호가 동일합니다.");
+            attrs.addFlashAttribute("msg", String.format("기존 비밀번호와 변경할 비밀번호가 동일합니다."));
+            
+            return "redirect:/change_pw";
+        }
+        
+        // 비밀번호 변경
+        SessionDTO user =(SessionDTO)session.getAttribute("user");
+        adminService.changePassword(user.getId(), old, newPw);
+        attrs.addFlashAttribute("msg", String.format("비밀번호 변경이 완료되었습니다."));
+        return "redirect:/admin_menu";
     }
 }
