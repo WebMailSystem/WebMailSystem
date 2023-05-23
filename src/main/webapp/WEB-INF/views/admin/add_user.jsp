@@ -39,7 +39,7 @@
                 <table border="0" align="left">
                     <tr>
                         <td>사용자 ID</td>
-                        <td> <input type="text" name="id" value="" size="20" />  </td>
+                        <td> <input type="text" name="username" value="" size="20" />  </td>
                     </tr>
                     <tr>
                         <td>암호 </td>

@@ -5,6 +5,7 @@
 package deu.cse.spring_webmail.control;
 
 import deu.cse.spring_webmail.dto.SessionDTO;
+import deu.cse.spring_webmail.dto.SignupForm;
 import deu.cse.spring_webmail.entity.Role;
 import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.model.InboxService;
@@ -23,6 +24,7 @@ import javax.imageio.ImageIO;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,10 +149,10 @@ public class SystemController {
     }
 
     @PostMapping("/add_user.do")
-    public String addUserDo(@RequestParam String id, @RequestParam String password,
+    public String addUserDo(@Valid SignupForm user, @RequestParam String username, @RequestParam String password,
             RedirectAttributes attrs) {
         log.debug("add_user.do: id = {}, password = {}, port = {}",
-                id, password, JAMES_CONTROL_PORT);
+                username, password, JAMES_CONTROL_PORT);
         
         log.info("session = {}",session.getAttribute("userid"));
         
@@ -163,19 +165,33 @@ public class SystemController {
 //            return "redirect:/main_menu";
 //        }
         
-        try {
-            String cwd = ctx.getRealPath(".");
-            UserAdminAgent agent = new UserAdminAgent(JAMES_HOST, JAMES_CONTROL_PORT, cwd,
-                    ROOT_ID, ROOT_PASSWORD, ADMINISTRATOR);
-            
-            if (agent.addUser(id, password)) {
-                attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 성공하였습니다.", id));
-            } else {                
-                attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 실패하였습니다.", id));
-            }
-        } catch (Exception ex) {
-            log.error("add_user.do: 시스템 접속에 실패했습니다. 예외 = {}", ex.getMessage());
+        
+//        try {
+//            String cwd = ctx.getRealPath(".");
+//            UserAdminAgent agent = new UserAdminAgent(JAMES_HOST, JAMES_CONTROL_PORT, cwd,
+//                    ROOT_ID, ROOT_PASSWORD, ADMINISTRATOR);
+//            
+//            
+//            
+//            if (agent.addUser(username, password)) {
+//                attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 성공하였습니다.", username));
+//            } else {                
+//                attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 실패하였습니다.", username));
+//            }
+//        } catch (Exception ex) {
+//            log.error("add_user.do: 시스템 접속에 실패했습니다. 예외 = {}", ex.getMessage());
+//        }
+
+        boolean check = adminService.check(user.getUsername());
+        
+        if (check) {
+            // 팝업 안 뜨는 이유 : redirect때문임
+            attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 실패하였습니다.", username));
+            return "redirect:/add_user";
         }
+
+        adminService.signUp(user);
+        attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 성공하였습니다.", username));
 
         return "redirect:/admin_menu";
     }
