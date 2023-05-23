@@ -120,10 +120,21 @@ public class SystemController {
     }
 
     @GetMapping("/admin_menu")
-    public String adminMenu(Model model) {
+    public String adminMenu(Model model, RedirectAttributes attrs) {
         log.debug("root.id = {}, root.password = {}, admin.id = {}",
                 ROOT_ID, ROOT_PASSWORD, ADMINISTRATOR);
-
+        
+        log.info("session = {}",session.getAttribute("userid"));
+        
+        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
+//        String nowUser = session.getAttribute("userid").toString();                
+        
+//        if(!isAdmin(nowUser)) {
+//            log.info("관리자 권한 없는데 유저 추가하려고 함");
+//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
+//            return "redirect:/main_menu";
+//        }
+        
         model.addAttribute("userList", getUserList());
         return "admin/admin_menu";
     }
@@ -138,14 +149,23 @@ public class SystemController {
             RedirectAttributes attrs) {
         log.debug("add_user.do: id = {}, password = {}, port = {}",
                 id, password, JAMES_CONTROL_PORT);
-
+        
+        log.info("session = {}",session.getAttribute("userid"));
+        
+        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
+//        String nowUser = session.getAttribute("userid").toString();                
+        
+//        if(!isAdmin(nowUser)) {
+//            log.info("관리자 권한 없는데 유저 추가하려고 함");
+//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
+//            return "redirect:/main_menu";
+//        }
+        
         try {
             String cwd = ctx.getRealPath(".");
             UserAdminAgent agent = new UserAdminAgent(JAMES_HOST, JAMES_CONTROL_PORT, cwd,
                     ROOT_ID, ROOT_PASSWORD, ADMINISTRATOR);
-
-            // if (addUser successful)  사용자 등록 성공 팦업창
-            // else 사용자 등록 실패 팝업창
+            
             if (agent.addUser(id, password)) {
                 attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 성공하였습니다.", id));
             } else {
@@ -161,6 +181,18 @@ public class SystemController {
     @GetMapping("/delete_user")
     public String deleteUser(Model model) {
         log.debug("delete_user called");
+        
+        log.info("session = {}",session.getAttribute("userid"));
+        
+        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
+//        String nowUser = session.getAttribute("userid").toString();                
+        
+//        if(!isAdmin(nowUser)) {
+//            log.info("관리자 권한 없는데 유저 추가하려고 함");
+//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
+//            return "redirect:/main_menu";
+//        }
+        
         model.addAttribute("userList", getUserList());
         return "admin/delete_user";
     }
@@ -174,6 +206,18 @@ public class SystemController {
     @PostMapping("delete_user.do")
     public String deleteUserDo(@RequestParam String[] selectedUsers, RedirectAttributes attrs) {
         log.debug("delete_user.do: selectedUser = {}", List.of(selectedUsers));
+
+        
+        log.info("session = {}",session.getAttribute("userid"));
+        
+        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
+//        String nowUser = session.getAttribute("userid").toString();                
+        
+//        if(!isAdmin(nowUser)) {
+//            log.info("관리자 권한 없는데 유저 추가하려고 함");
+//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
+//            return "redirect:/main_menu";
+//        }
 
         try {
             String cwd = ctx.getRealPath(".");
