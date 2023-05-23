@@ -20,6 +20,7 @@
 
         <p> <a href="main_menu"> 메일 읽기 </a> </p>
         <p> <a href="write_mail"> 메일 쓰기 </a> </p>
+        <p> <a href="sent_mail"> 송신 메일함 </a> </p>
         <p> <a href="/webmail/favorite"> 즐겨찾기 </a> </p>
         <p> <a href="addr_book"> 주소록 </a> </p>
         <p><a href="/webmail/recyclebin">휴지통</a></p>        

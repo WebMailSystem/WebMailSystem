@@ -11,6 +11,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Stream;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -50,9 +51,14 @@ public class WriteController {
     AddrsRepository repository;
     
     @GetMapping("/write_mail")
-    public String writeMail() {
+    public String writeMail(HttpServletRequest request, Model model) {
         log.debug("write_mail called...");
         session.removeAttribute("sender");  // 220612 LJM - 메일 쓰기 시는 
+        
+        HttpSession session = request.getSession();
+        List<Addrs> dataRows = repository.findByUsername((String) session.getAttribute("userid"));
+        model.addAttribute("dataRows", dataRows);
+        
         return "write_mail/write_mail";
     }
     
