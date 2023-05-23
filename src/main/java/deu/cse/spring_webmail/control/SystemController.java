@@ -105,7 +105,7 @@ public class SystemController {
         log.info("messageList = {}",messageList);
         model.addAttribute("messageList", messageList);
         return "main_menu";
-    }
+    }    
     @PostMapping("/main_menu")
     public String searchMainMenu(@RequestParam("searchType") String searchType,@RequestParam("keyword")String keyword,Model model){
         log.info("type = {}, keyword = {}",searchType,keyword);

@@ -28,7 +28,7 @@ public class MessageFormatter {
     @Getter private String[] messageId;
     
     
-
+    
 
     public String getMessageTable(Message[] messages) {
         StringBuilder buffer = new StringBuilder();

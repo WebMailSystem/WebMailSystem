@@ -65,7 +65,7 @@ public class ReadController {
             RedirectAttributes addr
             ) {        
         log.debug("download_folder = {}", DOWNLOAD_FOLDER);
-        log.info("messageId = {}",messageId);    
+        log.info("messageId = {}",messageId);   
         addr.addFlashAttribute("msgid", msgid);
         addr.addFlashAttribute("messageId", messageId);
         addr.addFlashAttribute("sender", sender); 
