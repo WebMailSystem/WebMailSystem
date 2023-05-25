@@ -71,5 +71,4 @@ public class Recyclebin {
     
     @Column(name = "title")
     private String title;
-    // Getters and setters omitted for brevity
 }
