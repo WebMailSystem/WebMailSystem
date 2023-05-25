@@ -8,11 +8,9 @@ import deu.cse.spring_webmail.dto.SessionDTO;
 import deu.cse.spring_webmail.dto.SignupForm;
 import deu.cse.spring_webmail.entity.Inbox;
 import deu.cse.spring_webmail.entity.Role;
-import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.model.InboxService;
 import deu.cse.spring_webmail.model.Pop3Agent;
 import deu.cse.spring_webmail.model.UserAdminAgent;
-import deu.cse.spring_webmail.model.UserService;
 import deu.cse.spring_webmail.repository.InboxRepository;
 import jakarta.mail.MessagingException;
 import java.awt.image.BufferedImage;
@@ -38,14 +36,13 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
  * 초기 화면과 관리자 기능(사용자 추가, 삭제)에 대한 제어기
- * ss
+ * 
  * @author skylo
  */
 @Controller
@@ -157,15 +154,6 @@ public class SystemController {
         
         log.info("session = {}",session.getAttribute("userid"));
         
-        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
-//        String nowUser = session.getAttribute("userid").toString();                
-        
-//        if(!isAdmin(nowUser)) {
-//            log.info("관리자 권한 없는데 유저 추가하려고 함");
-//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
-//            return "redirect:/main_menu";
-//        }
-        
         model.addAttribute("userList", getUserList());
         return "admin/admin_menu";
     }
@@ -183,32 +171,6 @@ public class SystemController {
         
         log.info("session = {}",session.getAttribute("userid"));
         
-        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
-//        String nowUser = session.getAttribute("userid").toString();                
-        
-//        if(!isAdmin(nowUser)) {
-//            log.info("관리자 권한 없는데 유저 추가하려고 함");
-//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
-//            return "redirect:/main_menu";
-//        }
-        
-        
-//        try {
-//            String cwd = ctx.getRealPath(".");
-//            UserAdminAgent agent = new UserAdminAgent(JAMES_HOST, JAMES_CONTROL_PORT, cwd,
-//                    ROOT_ID, ROOT_PASSWORD, ADMINISTRATOR);
-//            
-//            
-//            
-//            if (agent.addUser(username, password)) {
-//                attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 성공하였습니다.", username));
-//            } else {                
-//                attrs.addFlashAttribute("msg", String.format("사용자(%s) 추가를 실패하였습니다.", username));
-//            }
-//        } catch (Exception ex) {
-//            log.error("add_user.do: 시스템 접속에 실패했습니다. 예외 = {}", ex.getMessage());
-//        }
-
         boolean check = adminService.check(user.getUsername());
         
         if (check) {
@@ -228,16 +190,7 @@ public class SystemController {
         log.debug("delete_user called");
         
         log.info("session = {}",session.getAttribute("userid"));
-        
-        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
-//        String nowUser = session.getAttribute("userid").toString();                
-        
-//        if(!isAdmin(nowUser)) {
-//            log.info("관리자 권한 없는데 유저 추가하려고 함");
-//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
-//            return "redirect:/main_menu";
-//        }
-        
+                        
         model.addAttribute("userList", getUserList());
         return "admin/delete_user";
     }
@@ -251,19 +204,9 @@ public class SystemController {
     @PostMapping("delete_user.do")
     public String deleteUserDo(@RequestParam String[] selectedUsers, RedirectAttributes attrs) {
         log.debug("delete_user.do: selectedUser = {}", List.of(selectedUsers));
-
         
         log.info("session = {}",session.getAttribute("userid"));
-        
-        // 스프링 시큐리티 사용하기 전 관리자 체크 방식        
-//        String nowUser = session.getAttribute("userid").toString();                
-        
-//        if(!isAdmin(nowUser)) {
-//            log.info("관리자 권한 없는데 유저 추가하려고 함");
-//            attrs.addFlashAttribute("msg", String.format("관리자 권한이 없습니다."));
-//            return "redirect:/main_menu";
-//        }
-
+              
         try {
             String cwd = ctx.getRealPath(".");
             UserAdminAgent agent = new UserAdminAgent(JAMES_HOST, JAMES_CONTROL_PORT, cwd,
