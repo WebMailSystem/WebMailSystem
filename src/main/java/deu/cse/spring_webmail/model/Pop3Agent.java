@@ -25,28 +25,44 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @NoArgsConstructor        // 기본 생성자 생성
 public class Pop3Agent {
-    @Getter @Setter private String host;
-    @Getter @Setter private String userid;
-    @Getter @Setter private String password;
-    @Getter @Setter private Store store;
-    @Getter @Setter private String excveptionType;
-    @Getter @Setter private HttpServletRequest request;
-        
+
+    @Getter
+    @Setter
+    private String host;
+    @Getter
+    @Setter
+    private String userid;
+    @Getter
+    @Setter
+    private String password;
+    @Getter
+    @Setter
+    private Store store;
+    @Getter
+    @Setter
+    private String excveptionType;
+    @Getter
+    @Setter
+    private HttpServletRequest request;
+
     // 220612 LJM - added to implement REPLY
-    @Getter private String sender;
-    @Getter private String subject;
-    @Getter private String body;
-    @Getter private String date;
-    @Getter private String[] messageId;
-    
-      
-    
+    @Getter
+    private String sender;
+    @Getter
+    private String subject;
+    @Getter
+    private String body;
+    @Getter
+    private String date;
+    @Getter
+    private String[] messageId;
+
     public Pop3Agent(String host, String userid, String password) {
         this.host = host;
         this.userid = userid;
         this.password = password;
     }
-    
+
     public boolean validate() {
         boolean status = false;
 
@@ -60,49 +76,48 @@ public class Pop3Agent {
             return status;
         }
     }
-    
-    public void addFavorite(int msgid,InboxService inboxService) throws MessagingException{       
+
+    public void addFavorite(int msgid, InboxService inboxService) throws MessagingException {
         boolean status = false;
 
         if (!connectToStore()) {
-            log.info("addFavorite status = {}",status);
+            log.info("addFavorite status = {}", status);
         }
-        try{           
+        try {
             // Folder 설정
 //            Folder folder = store.getDefaultFolder();
-            
+
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_WRITE);
-            
+
             // Message에 DELETED flag 설정
             Message msg = folder.getMessage(msgid);
-            
+
             //휴지통기능                      
-            MessageFormatter formatter = new MessageFormatter(userid);                       
-            
+            MessageFormatter formatter = new MessageFormatter(userid);
+
             formatter.setRequest(request);  // 210308 LJM - added                       
-            formatter.getMessage(msg);            
+            formatter.getMessage(msg);
             sender = formatter.getSender();  // 220612 LJM - added                                                         
-            body = formatter.getBody();            
-            date =  msg.getSentDate().toString();
-            messageId = formatter.getMessageId();           
-            
-           log.info("추가");
-           inboxService.addFavorite(userid, sender, messageId);
-            
-            
+            body = formatter.getBody();
+            date = msg.getSentDate().toString();
+            messageId = formatter.getMessageId();
+
+            log.info("추가");
+            inboxService.addFavorite(userid, sender, messageId);
+
             folder.close(true);  // expunge == true
             store.close();
-        }catch (Exception ex) {
+        } catch (Exception ex) {
             log.error("addMessage() error: {}", ex.getMessage());
         }
     }
-    
-    public void deleteFavorite(String msgId,InboxService inboxService,String sender){
-           inboxService.deleteFavorite(userid, sender, msgId);
+
+    public void deleteFavorite(String msgId, InboxService inboxService, String sender) {
+        inboxService.deleteFavorite(userid, sender, msgId);
     }
 
-    public boolean deleteMessage(int msgid, boolean really_delete,RecyclebinService recyclebinService) {
+    public boolean deleteMessage(int msgid, boolean really_delete, RecyclebinService recyclebinService) {
         boolean status = false;
 
         if (!connectToStore()) {
@@ -114,25 +129,24 @@ public class Pop3Agent {
 //            Folder folder = store.getDefaultFolder();
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_WRITE);
-            
+
             // Message에 DELETED flag 설정
             Message msg = folder.getMessage(msgid);
-                        
+
             //휴지통기능                      
-            MessageFormatter formatter = new MessageFormatter(userid);                       
-            
+            MessageFormatter formatter = new MessageFormatter(userid);
+
             formatter.setRequest(request);  // 210308 LJM - added                       
-            formatter.getMessage(msg);            
+            formatter.getMessage(msg);
             sender = formatter.getSender();  // 220612 LJM - added                                   
-            subject = formatter.getSubject();            
-            body = formatter.getBody();            
-            date =  msg.getSentDate().toString();
+            subject = formatter.getSubject();
+            body = formatter.getBody();
+            date = msg.getSentDate().toString();
             messageId = formatter.getMessageId();
-                        
-            recyclebinService.moveInboxToRecyclebin(userid, sender, subject,messageId,date);                  
-            
+            recyclebinService.moveInboxToRecyclebin(userid, sender, subject, messageId, date);
+
             msg.setFlag(Flags.Flag.DELETED, really_delete);
-                                    
+
             // 폴더에서 메시지 삭제
             // Message [] expungedMessage = folder.expunge();
             // <-- 현재 지원 안 되고 있음. 폴더를 close()할 때 expunge해야 함.
@@ -169,7 +183,7 @@ public class Pop3Agent {
             // From, To, Cc, Bcc, ReplyTo, Subject & Date
             fp.add(FetchProfile.Item.ENVELOPE);
             folder.fetch(messages, fp);
-            
+
             MessageFormatter formatter = new MessageFormatter(userid);  //3.5
             result = formatter.getMessageTable(messages);   // 3.6
 
@@ -181,19 +195,20 @@ public class Pop3Agent {
         } finally {
             return result;
         }
-    }   
-    public String getMessage(String messageIds,InboxService inboxservice,String sender) {
+    }
+
+    public String getMessage(String messageIds, InboxService inboxservice, String sender) {
         String result = "POP3  서버 연결이 되지 않아 메시지를 볼 수 없습니다.";
 
         if (!connectToStore()) {
             log.error("POP3 connection failed!");
             return result;
-        }                                    
+        }
         try {
             Message message = inboxservice.getMessage(userid, messageIds, sender);
-            MessageFormatter formatter = new MessageFormatter(userid);            
+            MessageFormatter formatter = new MessageFormatter(userid);
             formatter.setRequest(request);  // 210308 LJM - added
-            log.info("@@result = {}",formatter.getMessage(message));
+            log.info("@@result = {}", formatter.getMessage(message));
             result = formatter.getMessage(message);
             sender = formatter.getSender();  // 220612 LJM - added
             subject = formatter.getSubject();
@@ -202,11 +217,11 @@ public class Pop3Agent {
         } catch (MessagingException ex) {
             log.error("Pop3Agent.getMessageList() : exception = {}", ex);
             result = "Pop3Agent.getMessage() : exception = " + ex;
-        }finally{
+        } finally {
             return result;
-        }                                 
+        }
     }
- 
+
     private boolean connectToStore() {
         boolean status = false;
         Properties props = System.getProperties();
@@ -231,7 +246,49 @@ public class Pop3Agent {
             return status;
         }
     }
-    
-    
-    
+
+    public boolean spamMessage(int msgid, boolean really_delete, SpamService spamService, String send) {
+        boolean status = false;
+
+        if (!connectToStore()) {
+            return status;
+        }
+
+        try {
+            // Folder 설정
+//            Folder folder = store.getDefaultFolder();
+            Folder folder = store.getFolder("INBOX");
+            folder.open(Folder.READ_WRITE);
+
+            // Message에 DELETED flag 설정
+            Message msg = folder.getMessage(msgid);
+
+            //휴지통기능                      
+            MessageFormatter formatter = new MessageFormatter(userid);
+
+            formatter.setRequest(request);  // 210308 LJM - added                       
+            formatter.getMessage(msg);
+            sender = formatter.getSender();  // 220612 LJM - added                                   
+            subject = formatter.getSubject();
+            body = formatter.getBody();
+            date = msg.getSentDate().toString();
+            messageId = formatter.getMessageId();
+            
+            if (sender.equals(send)) {
+                spamService.moveInboxToSpam(userid, sender, subject, messageId, date);
+                msg.setFlag(Flags.Flag.DELETED, really_delete);
+                status = true;
+            }
+            // 폴더에서 메시지 삭제
+            // Message [] expungedMessage = folder.expunge();
+            // <-- 현재 지원 안 되고 있음. 폴더를 close()할 때 expunge해야 함.
+            folder.close(true);  // expunge == true
+            store.close();
+        } catch (Exception ex) {
+            log.error("spamMessage() error: {}", ex.getMessage());
+        } finally {
+            return status;
+        }
+    }
+
 }

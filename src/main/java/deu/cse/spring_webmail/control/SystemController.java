@@ -6,10 +6,12 @@ package deu.cse.spring_webmail.control;
 
 import deu.cse.spring_webmail.dto.SessionDTO;
 import deu.cse.spring_webmail.entity.Role;
+import deu.cse.spring_webmail.entity.Spam;
 import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.model.InboxService;
 import deu.cse.spring_webmail.model.Pop3Agent;
 import deu.cse.spring_webmail.model.UserAdminAgent;
+import deu.cse.spring_webmail.repository.SpamRepository;
 import jakarta.mail.MessagingException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -39,8 +41,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /**
- * 초기 화면과 관리자 기능(사용자 추가, 삭제)에 대한 제어기
- * ss
+ * 초기 화면과 관리자 기능(사용자 추가, 삭제)에 대한 제어기 ss
+ *
  * @author skylo
  */
 @Controller
@@ -58,6 +60,9 @@ public class SystemController {
     @Autowired
     private final InboxService inboxService;
 
+    @Autowired
+    SpamRepository repository;
+
     @Value("${root.id}")
     private String ROOT_ID;
     @Value("${root.password}")
@@ -70,10 +75,10 @@ public class SystemController {
     private String JAMES_HOST;
 
     @GetMapping("/")
-    public String index(@RequestParam(required = false,name = "errormessage")String errorMessage,Model model) {              
-        log.info("session = {}",session.getAttribute("userid"));
-        SessionDTO sessionDTO = (SessionDTO)session.getAttribute("user");
-        if(sessionDTO != null && sessionDTO.getRole().equals(Role.USER)){
+    public String index(@RequestParam(required = false, name = "errormessage") String errorMessage, Model model) {
+        log.info("session = {}", session.getAttribute("userid"));
+        SessionDTO sessionDTO = (SessionDTO) session.getAttribute("user");
+        if (sessionDTO != null && sessionDTO.getRole().equals(Role.USER)) {
             return "redirect:/main_menu";
         }
         log.debug("index() called...");
@@ -82,7 +87,7 @@ public class SystemController {
         model.addAttribute("errorMessage", errorMessage);
         return "/index";
     }
- 
+
     protected boolean isAdmin(String userid) {
         boolean status = false;
 
@@ -96,24 +101,25 @@ public class SystemController {
     @GetMapping("/main_menu")
     public String mainmenu(Model model) {
         Pop3Agent pop3 = new Pop3Agent();
-        log.info("host = {},id = {},password = {}",(String) session.getAttribute("host"),(String) session.getAttribute("userid"),
+        log.info("host = {},id = {},password = {}", (String) session.getAttribute("host"), (String) session.getAttribute("userid"),
                 (String) session.getAttribute("password"));
         pop3.setHost((String) session.getAttribute("host"));
         pop3.setUserid((String) session.getAttribute("userid"));
         pop3.setPassword((String) session.getAttribute("password"));
         String messageList = pop3.getMessageList();
-        log.info("messageList = {}",messageList);
+        log.info("messageList = {}", messageList);
         model.addAttribute("messageList", messageList);
         return "main_menu";
-    }    
+    }
+
     @PostMapping("/main_menu")
-    public String searchMainMenu(@RequestParam("searchType") String searchType,@RequestParam("keyword")String keyword,Model model){
-        log.info("type = {}, keyword = {}",searchType,keyword);
-         String messageList = "";
-        try{
-        messageList = inboxService.search((String)session.getAttribute("userid"), searchType, keyword);
-        }catch(Exception e){
-            log.error("e",e);
+    public String searchMainMenu(@RequestParam("searchType") String searchType, @RequestParam("keyword") String keyword, Model model) {
+        log.info("type = {}, keyword = {}", searchType, keyword);
+        String messageList = "";
+        try {
+            messageList = inboxService.search((String) session.getAttribute("userid"), searchType, keyword);
+        } catch (Exception e) {
+            log.error("e", e);
         }
         model.addAttribute("messageList", messageList);
         return "main_menu";
@@ -206,9 +212,9 @@ public class SystemController {
 
     /**
      * https://34codefactory.wordpress.com/2019/06/16/how-to-display-image-in-jsp-using-spring-code-factory/
-     * 
+     *
      * @param imageName
-     * @return 
+     * @return
      */
     @RequestMapping(value = "/get_image/{imageName}")
     @ResponseBody
@@ -228,7 +234,7 @@ public class SystemController {
         byte[] imageInByte;
         try {
             byteArrayOutputStream = new ByteArrayOutputStream();
-            bufferedImage = ImageIO.read(new File(folderPath + File.separator + imageName) );
+            bufferedImage = ImageIO.read(new File(folderPath + File.separator + imageName));
             String format = imageName.substring(imageName.lastIndexOf(".") + 1);
             ImageIO.write(bufferedImage, format, byteArrayOutputStream);
             byteArrayOutputStream.flush();
@@ -242,44 +248,46 @@ public class SystemController {
         }
         return null;
     }
-    
+
     @GetMapping("/favorite")
-    public String favorite(Model model,HttpSession session){
+    public String favorite(Model model, HttpSession session) {
         String messageList = "";
-        var username = (String)session.getAttribute("userid");
-        try{
-        messageList = inboxService.favorites(username);
-        }catch(Exception e){
-            log.error("e",e);
+        var username = (String) session.getAttribute("userid");
+        try {
+            messageList = inboxService.favorites(username);
+        } catch (Exception e) {
+            log.error("e", e);
         }
-        model.addAttribute("messageList", messageList);                                
+        model.addAttribute("messageList", messageList);
         return "favorite";
     }
+
     @GetMapping("add-favorite.do")
-    public String addFavorite(@RequestParam("msgid") int msgid){       
-        Pop3Agent pop3 = new Pop3Agent();       
+    public String addFavorite(@RequestParam("msgid") int msgid) {
+        Pop3Agent pop3 = new Pop3Agent();
         pop3.setHost((String) session.getAttribute("host"));
         pop3.setUserid((String) session.getAttribute("userid"));
         pop3.setPassword((String) session.getAttribute("password"));
         pop3.setRequest(request);
         try {
-            pop3.addFavorite(msgid,inboxService);
+            pop3.addFavorite(msgid, inboxService);
         } catch (MessagingException ex) {
             Logger.getLogger(SystemController.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "redirect:/favorite";
     }
+
     @GetMapping("delete-favorite.do")
-    public String deleteFavorite(@RequestParam("messageId") String msgid,@RequestParam("sender") String sender){        
-        Pop3Agent pop3 = new Pop3Agent();       
+    public String deleteFavorite(@RequestParam("messageId") String msgid, @RequestParam("sender") String sender) {
+        Pop3Agent pop3 = new Pop3Agent();
         pop3.setHost((String) session.getAttribute("host"));
         pop3.setUserid((String) session.getAttribute("userid"));
         pop3.setPassword((String) session.getAttribute("password"));
         pop3.setRequest(request);
-        int semicolonIndex = msgid.indexOf(";");        
-        String result = msgid.substring(semicolonIndex + 1);                           
-        pop3.deleteFavorite(result,inboxService,sender);
-        
-        return "redirect:/favorite";  
+        int semicolonIndex = msgid.indexOf(";");
+        String result = msgid.substring(semicolonIndex + 1);
+        pop3.deleteFavorite(result, inboxService, sender);
+
+        return "redirect:/favorite";
     }
 }
