@@ -21,6 +21,8 @@ public interface InboxRepository extends JpaRepository<Inbox, InboxId>{
     
     List<Inbox> findByIdRepositoryNameAndSenderContains(String repositoryName,String sender);
     
+    List<Inbox> findByIdRepositoryName(String user);
+    
     @Query("SELECT i FROM inbox i WHERE i.id.repositoryName = :repositoryName AND i.messageBody LIKE CONCAT('%','Subject:','%',:contents,'%')")
     List<Inbox> findInboxByRepositoryNameAndMessageBodyContaining(@Param("repositoryName")String repositoryName,@Param("contents") String contents);
     
