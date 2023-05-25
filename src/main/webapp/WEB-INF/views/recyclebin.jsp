@@ -20,7 +20,6 @@
             pop3.setUserid((String) session.getAttribute("userid"));
             pop3.setPassword((String) session.getAttribute("password"));
 %>
--->
 
 <html lang="ko">
     <head>
