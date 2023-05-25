@@ -6,12 +6,14 @@ package deu.cse.spring_webmail.control;
 
 import deu.cse.spring_webmail.dto.SessionDTO;
 import deu.cse.spring_webmail.dto.SignupForm;
+import deu.cse.spring_webmail.entity.Inbox;
 import deu.cse.spring_webmail.entity.Role;
 import deu.cse.spring_webmail.entity.Users;
 import deu.cse.spring_webmail.model.InboxService;
 import deu.cse.spring_webmail.model.Pop3Agent;
 import deu.cse.spring_webmail.model.UserAdminAgent;
 import deu.cse.spring_webmail.model.UserService;
+import deu.cse.spring_webmail.repository.InboxRepository;
 import jakarta.mail.MessagingException;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
@@ -51,7 +53,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Slf4j
 @RequiredArgsConstructor
 public class SystemController {
-
+        
     @Autowired
     private ServletContext ctx;
     @Autowired
@@ -62,6 +64,9 @@ public class SystemController {
     private final InboxService inboxService;    
     private final AdminService adminService;
 
+    @Autowired
+    private InboxRepository inboxRepository;
+    
     @Value("${root.id}")
     private String ROOT_ID;
     @Value("${root.password}")
@@ -98,7 +103,7 @@ public class SystemController {
     }
 
     @GetMapping("/main_menu")
-    public String mainmenu(Model model) {
+    public String mainmenu(Model model) { // currentPage는 해당 페이지 번호
         Pop3Agent pop3 = new Pop3Agent();
         log.info("host = {},id = {},password = {}",(String) session.getAttribute("host"),(String) session.getAttribute("userid"),
                 (String) session.getAttribute("password"));
@@ -107,9 +112,31 @@ public class SystemController {
         pop3.setPassword((String) session.getAttribute("password"));
         String messageList = pop3.getMessageList();
         log.info("messageList = {}",messageList);
+        
+        /**
+         *  페이징 처리 로직 부분
+         * 
+         *  @author 정민수
+         */
+       
+        // 페이징 처리를 위한 전체 dataRow 확인
+        List<Inbox> dataRows = inboxRepository.findByIdRepositoryName(session.getAttribute("userid").toString());
+        
+        log.info("dataRows 총 개수 = {}", dataRows.size());
+        
+        int rows = dataRows.size(); // 전체 레코드 수
+        int recordsPerPage = 5; // 페이지 당 보여줄 메일 수
+        int totalPages = (int) Math.ceil((double) rows / recordsPerPage); // 전체 페이지 수 계산
+                
+        log.info("dataRows 총 개수 = {}", dataRows.size());
+        
         model.addAttribute("messageList", messageList);
+        model.addAttribute("totalPages", totalPages);
+        model.addAttribute("recordsPerPage", recordsPerPage);
+        
         return "main_menu";
     }    
+    
     @PostMapping("/main_menu")
     public String searchMainMenu(@RequestParam("searchType") String searchType,@RequestParam("keyword")String keyword,Model model){
         log.info("type = {}, keyword = {}",searchType,keyword);

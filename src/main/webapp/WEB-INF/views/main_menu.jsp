@@ -58,7 +58,51 @@
             </div>
             ${messageList}
         </div>
-
+        
+        <!-- 페이징 처리 버튼 동적으로 만드는 코드 -->
+        <c:if test="${totalPages > 0}">
+                <div class="pagination">
+                    <ol>
+                        <!-- 페이지 번호 링크 -->
+                        <c:forEach begin="1" end="${totalPages}" var="page">
+                            <li>
+                                <span class="page-link" onclick="changePage(${page})">${page}</span>
+                            </li>
+                        </c:forEach>    
+                    </ol>
+                </div>
+        </c:if>
+        
+        <script>
+                var table = document.getElementById('mailTable');
+                var rowsPerPage = ${recordsPerPage}; // 보여줄 페이지 수 
+                var currentPage = 1;
+                function showPage(pageNumber) {
+                    var rows = table.rows;
+                    
+                    for (var i = 1; i < rows.length-1; i++) {
+                        if (i >= (pageNumber - 1) * rowsPerPage + 1 && i <= pageNumber * rowsPerPage) {
+                            rows[i].classList.remove('hidden');
+                        } else {
+                            rows[i].classList.add('hidden');
+                        }
+                    }                    
+                }
+                function changePage(pageNumber) {
+                    if (pageNumber < 1 || pageNumber > Math.ceil((table.rows.length - 1) / rowsPerPage)) {
+                        return;
+                    }
+                    currentPage = pageNumber;
+                    showPage(currentPage);
+                    var pageLinks = document.getElementsByClassName('page-link');
+                    for (var i = 0; i < pageLinks.length; i++) {
+                        pageLinks[i].classList.remove('active');
+                    }
+                    pageLinks[currentPage - 1].classList.add('active');
+                }
+                showPage(currentPage);
+            </script>
+        
         <%@include file="footer.jspf"%>
     </body>
 </html>
