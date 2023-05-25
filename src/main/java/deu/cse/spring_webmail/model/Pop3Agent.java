@@ -68,9 +68,7 @@ public class Pop3Agent {
             log.info("addFavorite status = {}",status);
         }
         try{           
-            // Folder 설정
-//            Folder folder = store.getDefaultFolder();
-            
+            // Folder 설정            
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_WRITE);
             
@@ -111,7 +109,6 @@ public class Pop3Agent {
 
         try {
             // Folder 설정
-//            Folder folder = store.getDefaultFolder();
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_WRITE);
             

@@ -79,13 +79,11 @@ public class MessageFormatter {
         buffer.append("</form>");                
 
         return buffer.toString();
-//        return "MessageFormatter 테이블 결과";
     }
 
     public String getMessage(Message message) {
         StringBuilder buffer = new StringBuilder();
 
-        // MessageParser parser = new MessageParser(message, userid);
         MessageParser parser = new MessageParser(message, userid, request);
         parser.parse(true);
         
@@ -154,6 +152,5 @@ public class MessageFormatter {
         buffer.append("</table>");
 
         return buffer.toString();
-//        return "MessageFormatter 테이블 결과";
     }
 }
