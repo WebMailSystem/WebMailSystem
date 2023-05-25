@@ -6,10 +6,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
 <!DOCTYPE html>
-
-<%-- @taglib  prefix="c" uri="http://java.sun.com/jsp/jstl/core" --%>
-
-
 <html lang="ko">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -29,7 +25,6 @@
         </div>
 
         <div id="main">
-            <%-- <jsp:include page="mail_send_form.jsp" /> --%>
             <form enctype="multipart/form-data" method="POST" action="write_mail.do" >
                 <table summary="주소록 기능에서 바로 메일쓰기">
                     <tr><th scope="col" colspan="2">메일 쓰기</th></tr>
