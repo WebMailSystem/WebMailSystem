@@ -35,7 +35,7 @@ public class MessageFormatter {
         
         // 메시지 제목 보여주기
         buffer.append("<form action=\"delete_multiple_mail.do\""
-                + " method=\"post\">"
+                + " method=\"post\" onsubmit=\"return deleteMailcheckButton()\">"
         );
         buffer.append("<table class=\"checkbox_group\" id=\"mailTable\">");  // table start
         
