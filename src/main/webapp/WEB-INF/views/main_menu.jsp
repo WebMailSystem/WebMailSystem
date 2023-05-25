@@ -31,6 +31,13 @@
             <c:if test="${!empty msg}">
             alert("${msg}");
             </c:if>
+            function deleteMailcheckButton(){
+                if(!confirm("메일을 삭제하시겠습니까?")){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
         </script>
     </head>
     <body>
