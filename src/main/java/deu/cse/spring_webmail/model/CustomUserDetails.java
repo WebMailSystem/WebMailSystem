@@ -8,7 +8,6 @@ import deu.cse.spring_webmail.entity.Users;
 import java.util.ArrayList;
 import java.util.Collection;
 import lombok.AllArgsConstructor;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

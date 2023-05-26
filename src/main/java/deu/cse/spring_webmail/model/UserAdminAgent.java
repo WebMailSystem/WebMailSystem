@@ -4,17 +4,13 @@
  */
 package deu.cse.spring_webmail.model;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  *
@@ -32,7 +28,6 @@ public class UserAdminAgent {
     private String ROOT_ID;
     private String ROOT_PASSWORD;
     private String ADMIN_ID;
-    // private final String EOL = "\n";
     private final String EOL = "\r\n";
     private String cwd;
 

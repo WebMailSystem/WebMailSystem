@@ -83,10 +83,9 @@ public class Pop3Agent {
         if (!connectToStore()) {
             log.info("addFavorite status = {}", status);
         }
-        try {
-            // Folder 설정
-//            Folder folder = store.getDefaultFolder();
 
+        try{           
+            // Folder 설정            
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_WRITE);
 
@@ -126,7 +125,6 @@ public class Pop3Agent {
 
         try {
             // Folder 설정
-//            Folder folder = store.getDefaultFolder();
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_WRITE);
 

@@ -35,21 +35,20 @@ public class MessageFormatter {
         
         // 메시지 제목 보여주기
         buffer.append("<form action=\"delete_multiple_mail.do\""
-                + " method=\"post\">"
+                + " method=\"post\" onsubmit=\"return deleteMailcheckButton()\">"
         );
-        
+
         buffer.append("<input type=\"text\" name=\"spamId\" />");
         buffer.append("<input type=\"submit\" value=\"스팸 등록\" onclick=\"selectAll(this);\" formaction=\"spam_mail.do\"/>");
 
-        buffer.append("<table class=\"checkbox_group\">");  // table start
-        
+        buffer.append("<table class=\"checkbox_group\" id=\"mailTable\">");  // table start
         
         buffer.append("<tr> "
                 + " <th> No. </td> "
                 + " <th> 보낸 사람 </td>"
                 + " <th> 제목 </td>     "
                 + " <th> 보낸 날짜 </td>   "
-                + " <th onclick=\"selectAll(this)\"> 삭제 </th>"
+                + " <th> 삭제 </th>"
                 + " </tr>");
 
         for (int i = messages.length - 1; i >= 0; i--) {
@@ -70,7 +69,7 @@ public class MessageFormatter {
                     + " </tr>");
         }
         
-        buffer.append("<tr> "
+        buffer.append("<tr id=\"test\"> "
                 + " <th>  </td> "
                 + " <th>  </td>"
                 + " <th>  </td>     "
@@ -79,17 +78,15 @@ public class MessageFormatter {
                 + " <button type=\"submit\">삭제하기</button>"
                 + "</td>   "
                 + " </tr>");
-        buffer.append("</form>");
-        buffer.append("</table>");        
+        buffer.append("</table>");
+        buffer.append("</form>");                
 
         return buffer.toString();
-//        return "MessageFormatter 테이블 결과";
     }
 
     public String getMessage(Message message) {
         StringBuilder buffer = new StringBuilder();
 
-        // MessageParser parser = new MessageParser(message, userid);
         MessageParser parser = new MessageParser(message, userid, request);
         parser.parse(true);
         
@@ -158,6 +155,5 @@ public class MessageFormatter {
         buffer.append("</table>");
 
         return buffer.toString();
-//        return "MessageFormatter 테이블 결과";
     }
 }

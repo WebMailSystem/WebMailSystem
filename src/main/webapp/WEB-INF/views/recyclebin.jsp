@@ -20,7 +20,6 @@
             pop3.setUserid((String) session.getAttribute("userid"));
             pop3.setPassword((String) session.getAttribute("password"));
 %>
--->
 
 <html lang="ko">
     <head>
@@ -31,6 +30,20 @@
             <c:if test="${!empty msg}">
             alert("${msg}");
             </c:if>
+            function reMailcheckButton(){
+                if(!confirm("메일을 복구 하시겠습니까?")){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
+            function deleteMailcheckButton(){
+                if(!confirm("메일을 영구 삭제하시겠습니까?")){
+                    return false;
+                }else{
+                    return true;
+                }
+            }
         </script>
     </head>
     <body>
@@ -62,8 +75,8 @@
                     <td id="sender">${sender}</td>
                     <td id ="subject"><a href="recyclebin/${recyclebinDTO.id}">${recyclebinDTO.title}</a></td>
                     <td id ="date">${recyclebinDTO.date}</td>
-                    <td id ="restore"><a href="recyclebin/restore/${recyclebinDTO.id}">복구</a> </td>
-                    <td id ="delete"><a href="recyclebin/delete/${recyclebinDTO.id}">삭제</a> </td>
+                    <td id ="restore"><a href="recyclebin/restore/${recyclebinDTO.id}" onclick="return reMailcheckButton()">복구</a> </td>
+                    <td id ="delete"><a href="recyclebin/delete/${recyclebinDTO.id}" onclick="return deleteMailcheckButton()">삭제</a> </td>
                 </tr>
                 <% i--; %>
             </c:forEach>
