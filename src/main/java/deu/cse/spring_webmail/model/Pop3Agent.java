@@ -252,14 +252,13 @@ public class Pop3Agent {
         }
         try {
             // Folder 설정
-//            Folder folder = store.getDefaultFolder();
             Folder folder = store.getFolder("INBOX");
             folder.open(Folder.READ_WRITE);
 
             // Message에 DELETED flag 설정
             Message msg = folder.getMessage(msgid);
 
-            //휴지통기능                      
+            //스팸기능                      
             MessageFormatter formatter = new MessageFormatter(userid);
 
             formatter.setRequest(request);  // 210308 LJM - added                       
