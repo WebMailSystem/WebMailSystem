@@ -247,11 +247,9 @@ public class Pop3Agent {
 
     public boolean spamMessage(int msgid, boolean really_delete, SpamService spamService, String send) {
         boolean status = false;
-
         if (!connectToStore()) {
             return status;
         }
-
         try {
             // Folder 설정
 //            Folder folder = store.getDefaultFolder();
@@ -277,16 +275,11 @@ public class Pop3Agent {
                 msg.setFlag(Flags.Flag.DELETED, really_delete);
                 status = true;
             }
-            // 폴더에서 메시지 삭제
-            // Message [] expungedMessage = folder.expunge();
-            // <-- 현재 지원 안 되고 있음. 폴더를 close()할 때 expunge해야 함.
             folder.close(true);  // expunge == true
             store.close();
         } catch (Exception ex) {
             log.error("spamMessage() error: {}", ex.getMessage());
-        } finally {
-            return status;
-        }
+        } 
+        return status;
     }
-
 }
