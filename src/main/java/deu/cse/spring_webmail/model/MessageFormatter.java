@@ -37,8 +37,11 @@ public class MessageFormatter {
         buffer.append("<form action=\"delete_multiple_mail.do\""
                 + " method=\"post\" onsubmit=\"return deleteMailcheckButton()\">"
         );
+
+        buffer.append("<input type=\"text\" name=\"spamId\" />");
+        buffer.append("<input type=\"submit\" value=\"스팸 등록\" onclick=\"selectAll(this);\" formaction=\"spam_mail.do\"/>");
+
         buffer.append("<table class=\"checkbox_group\" id=\"mailTable\">");  // table start
-        
         
         buffer.append("<tr> "
                 + " <th> No. </td> "

@@ -23,6 +23,7 @@
         <p> <a href="sent_mail"> 송신 메일함 </a> </p>
         <p> <a href="/webmail/favorite"> 즐겨찾기 </a> </p>
         <p> <a href="addr_book"> 주소록 </a> </p>
+        <p><a href="/webmail/spam">스팸함</a></p>     
         <p><a href="/webmail/recyclebin">휴지통</a></p>        
         <p><a href="/webmail/mypage">마이페이지</a></p>        
         <p><a href="/webmail/logout">로그아웃</a></p>
